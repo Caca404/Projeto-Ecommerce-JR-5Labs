@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 window.onload = function() {
     document.querySelectorAll('form input[name="typeUser"]').forEach(function(elem){
         elem.addEventListener('change', function(){
@@ -20,39 +18,4 @@ window.onload = function() {
             else elem.removeAttribute('required');
         });
     }
-
-    document.querySelector("#state").addEventListener('change', async function(){
-
-        let state = document.querySelector("#state").value;
-
-        let axiosConfig = {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                'Content-Type': 'application/json;charset=UTF-8'
-            }
-        };
-        
-        await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/'+state+'/municipios', axiosConfig)
-            .then(response => {
-
-                let optionList = document.querySelector('#city').options;
-
-                if(optionList.length != 1){
-                    let aux = (optionList.length) - 1;
-                    while (optionList.length != 0) {
-                        optionList.remove(optionList[aux--]);
-                    }
-    
-                    optionList.add(new Option("Selecione uma cidade", "", true));
-                    optionList[0].setAttribute('disabled', true);
-                }
-
-                response.data.forEach(option =>
-                    optionList.add(
-                        new Option(option.nome, option.nome)
-                    )
-                );
-            })
-            .catch(error => console.log(error.response.data));
-    });
 };

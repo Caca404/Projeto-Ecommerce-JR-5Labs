@@ -30,8 +30,17 @@ class AuthController extends Controller
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)){ 
             $role = Auth::user()->type;
 
-            return redirect($role.'/dashboard');
+            return redirect()->route($role.'/dashboard');
         }
+
+        $erros = [];
+        $email = User::where('email', $request->email)->count();
+        if($email == 0)
+            $erros['email'] = "Não existe este email no sistema.";
+        else
+            $erros['password'] = "A senha está incorreta.";
+
+        return back()->withErrors($erros);
     }
 
     public function logout(Request $request)

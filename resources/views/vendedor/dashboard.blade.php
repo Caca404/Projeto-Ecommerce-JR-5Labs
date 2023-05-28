@@ -16,7 +16,13 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    @if (Auth::user()->type == "vendedor" && Auth::user()->vendedor->status != "P")
+                        {{ __('O administrador irá avaliar seu perfil para usar o site.') }}
+                    @else
+
+
+
+                    @endif
                 </div>
             </div>
         </div>

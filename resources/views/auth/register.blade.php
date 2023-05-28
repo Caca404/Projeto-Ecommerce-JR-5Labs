@@ -116,7 +116,7 @@
                                 </div>
 
                                 <div class="mb-3 col-12 col-md-6">
-                                    <label for="state" class="col-form-label">{{ __('Data de Nascimento') }}</label>
+                                    <label for="state" class="col-form-label">{{ __('Estado') }}</label>
                                     <select name="state" id="state" class="form-control @error('state') is-invalid @enderror"
                                         {{ old('typeUser') == 'comprador' ? 'required' : '' }}>
 
@@ -159,11 +159,9 @@
 
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="city" class="col-form-label">{{ __('Cidade') }}</label>
-                                    <select name="city" id="city" class="form-control @error('city') is-invalid @enderror"
+                                    <input type="text" name="city" id="city" class="form-control 
+                                        @error('city') is-invalid @enderror" value="{{ old('city') }}"
                                         {{ old('typeUser') == 'comprador' ? 'required' : '' }}>
-
-                                        <option value="" disabled selected>Selecione uma cidade</option>
-                                    </select>
 
                                     @error('city')
                                         <span class="invalid-feedback" role="alert">

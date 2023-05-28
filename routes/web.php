@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompradorController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/comprador/dashboard', function(){
             return view('comprador/dashboard');
         })->name('comprador/dashboard');
+
+        Route::get('/comprador/perfil', [CompradorController::class, 'perfil'])
+            ->name('comprador/perfil');
+
+        Route::patch('/comprador/perfil', [CompradorController::class, 'update']);
+        Route::post('/updatePassword', [CompradorController::class, 'updatePassword']);
     });
 
     Route::group(['middleware' => ['vendedor']], function () {
