@@ -9,6 +9,7 @@
 
     <title>@yield('title') | {{ config('app.name', 'Laravel') }}</title>
 
+    <script src="https://kit.fontawesome.com/d2d910e8a2.js" crossorigin="anonymous"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -45,31 +46,54 @@
                                 </li>
                             @endif
                         @else
-                            @if(Auth::user()->type == "vendedor" && Auth::user()->vendedor->status != "P")
+                            @if (Auth::user()->type == "admin")
                                 <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::user()->name }}
+                                    <a id="navbarDropdown" class="nav-link 
+                                        {{ Route::currentRouteName() == 'admin/compradores' ? 'active' : ''}}" 
+                                        href="/admin/compradores">
+
+                                        Compradores
                                     </a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link
+                                        {{ Route::currentRouteName() == 'admin/vendedores' ? 'active' : ''}}" 
+                                        href="/admin/vendedores">
 
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        @if (Auth::user()->type == 'comprador')
-                                            <a class="dropdown-item" href="/comprador/perfil">
-                                                {{ __('Perfil') }}
-                                            </a>
-                                        @endif
-
-                                        <a class="dropdown-item" href="/logout"
-                                        onclick="event.preventDefault();
-                                                        document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
-                                        </a>
-
-                                        <form id="logout-form" action="/logout" method="POST" class="d-none">
-                                            @csrf
-                                        </form>
-                                    </div>
+                                        Vendedores
+                                    </a>
                                 </li>
                             @endif
+
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }}
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                                    @if (Auth::user()->type == 'comprador')
+                                        <a class="dropdown-item" href="/comprador/perfil">
+                                            {{ __('Perfil') }}
+                                        </a>
+                                    @elseif(Auth::user()->type == 'vendedor')
+                                        @if(Auth::user()->vendedor->status != "P")
+
+                                        @endif
+
+                                    @endif
+
+                                    <a class="dropdown-item" href="/logout"
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="/logout" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
                         @endguest
                     </ul>
                 </div>

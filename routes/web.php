@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompradorController;
 use App\Models\User;
@@ -56,14 +57,26 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['middleware' => ['admin']], function () {
         Route::redirect('/', '/admin/dashboard');
+        Route::redirect('/admin', '/admin/dashboard');
 
         Route::get('/admin/dashboard', function(){
             return view('admin/dashboard');
         })->name('admin/dashboard');
+
+        Route::get('/admin/compradores', [AdminController::class, 'compradores'])
+            ->name('admin/compradores');
+
+        Route::get('/admin/vendedores', [AdminController::class, 'vendedores'])
+            ->name('admin/vendedores');
+
+        Route::get('/admin/decisionStatusVendedor/{id}/{decision}', 
+            [AdminController::class, 'decisionStatusVendedor'])->name('admin/decisionStatusVendedor');
+            
     });
 
     Route::group(['middleware' => ['comprador']], function () {
         Route::redirect('/', '/comprador/dashboard');
+        Route::redirect('/comprador', '/comprador/dashboard');
 
         Route::get('/comprador/dashboard', function(){
             return view('comprador/dashboard');
@@ -78,6 +91,7 @@ Route::middleware('auth')->group(function () {
 
     Route::group(['middleware' => ['vendedor']], function () {
         Route::redirect('/', '/vendedor/dashboard');
+        Route::redirect('/vendedor', '/vendedor/dashboard');
 
         Route::get('/vendedor/dashboard', function(){
             return view('vendedor/dashboard');

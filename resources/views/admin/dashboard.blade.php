@@ -4,22 +4,27 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
+    <h3>Dashboard Admin</h3>
+    <hr class="mb-5 mt-3">
+    <div class="d-flex flex-row justify-content-around flex-wrap">
+        <a class="col-12 col-md-3 mb-4 text-dark text-decoration-none" href="/admin/compradores">
+            <div class="border rounded p-2 py-4 text-center">
+                <i class="fa-solid fa-user mb-3" style="font-size: 60px"></i>
+                <h4>Lista de Compradores</h4>
             </div>
-        </div>
+        </a>
+        <a class="col-12 col-md-3 mb-4 text-dark text-decoration-none" href="/admin/vendedores">
+            <div class="border rounded p-2 py-4 text-center">
+                <i class="fa-solid fa-store mb-3" style="font-size: 60px"></i>
+                <h4>Lista de Vendedores</h4>
+            </div>
+        </a>
+        <a class="col-12 col-md-3 mb-4 text-dark text-decoration-none" href="#">
+            <div class="border rounded p-2 py-4 text-center">
+                <i class="fa-solid fa-cart-shopping mb-3" style="font-size: 60px"></i>
+                <h4>Lista de Produtos</h4>
+            </div>
+        </a>
     </div>
 </div>
 @endsection
