@@ -4,22 +4,30 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+    <h2>Bem vindo ao Project Ecommerce!</h2>
+    <hr class="mb-5 mt-3">
+    <div class="row g-3">
+        @if (!empty($produtos))    
+            @foreach ($produtos as $produto)
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <a href="/produto/{{$produto->id}}" class="text-dark text-decoration-none">
+                        <div class="card">
+                            <div class="card-header"></div>
+                            <div class="card-body text-center">
+                                <h5>{{ucfirst($produto->name)}}</h5>
+                                <span>R$ {{ number_format($produto->price, 2, ',', '.')}}</span>
+                            </div>
                         </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
+                    </a>
+                </div>
+            @endforeach
+        @else
+            <div class="card col-md-8 bg-danger text-white">
+                <div class="card-body">
+                    <h4>Ops! Estamos sem produtos no momento.</h4>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>
 @endsection

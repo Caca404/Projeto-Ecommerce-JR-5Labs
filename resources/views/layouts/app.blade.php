@@ -63,6 +63,14 @@
                                         Vendedores
                                     </a>
                                 </li>
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link
+                                        {{ Route::currentRouteName() == 'admin/produtos' ? 'active' : ''}}" 
+                                        href="/admin/produtos">
+
+                                        Produtos
+                                    </a>
+                                </li>
                             @endif
 
                             <li class="nav-item dropdown">

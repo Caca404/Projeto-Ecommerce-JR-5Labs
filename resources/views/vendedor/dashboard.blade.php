@@ -4,28 +4,44 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    @if (Auth::user()->type == "vendedor" && Auth::user()->vendedor->status != "P")
+    <div class="row g-3">
+        @if (Auth::user()->type == "vendedor" && Auth::user()->vendedor->status == "P")
+            <div class="col-md-8">
+                <div class="card bg-warning">
+                    <div class="card-body">
                         {{ __('O administrador irá avaliar seu perfil para usar o site.') }}
-                    @else
-
-
-
-                    @endif
+                    </div>
                 </div>
             </div>
-        </div>
+        @elseif (!empty($produtos))    
+            @foreach ($produtos as $produto)
+                <div class="col-12 col-md-3 mb-3 mb-md-0">
+                    <a href="#" class="text-dark text-decoration-none">
+                        <div class="card">
+                            <div class="card-header"></div>
+                            <div class="card-body text-center">
+                                <h5>{{ucfirst($produto->name)}}</h5>
+                                <span>R$ {{ number_format($produto->price, 2, ',', '.')}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        @else
+            <div class="col-12 col-md-8">
+                <a href="#" class="text-decoration-none text-dark">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>
+                                Olá, vendedor. Deseja cadastrar seus produtos para começar
+                                sua venda?
+                            </h4>
+                            <button class="btn btn-warning mt-4">Cadastrar Novo Produto</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 @endsection

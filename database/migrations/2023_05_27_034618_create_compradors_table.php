@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('birth_date');
             $table->string('state');
             $table->string('city');
-            $table->integer('credits');
+            $table->float('credits');
             $table->timestamps();
         });
     }

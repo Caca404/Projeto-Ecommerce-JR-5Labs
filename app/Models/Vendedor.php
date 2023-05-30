@@ -17,4 +17,9 @@ class Vendedor extends User
     {
         return $this->belongsTo(User::class);
     }
+
+    public function produtos()
+    {
+        return $this->hasMany(Produto::class);
+    }
 }

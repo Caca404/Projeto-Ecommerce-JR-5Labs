@@ -22,6 +22,6 @@ class AdminCheck
             return $next($request);
         } 
 
-        return redirect()->route('/dashboard');
+        return redirect()->route(Auth::user()->type.'/dashboard');
     }  
 }

@@ -22,4 +22,9 @@ class Comprador extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function produtos()
+    {
+        return $this->belongsToMany(Produto::class);
+    }
 }

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CompradorSeeder::class,
             VendedorSeeder::class,
+            ProdutoSeeder::class
         ]);
 
         // \App\Models\Admin::factory(10)->create();

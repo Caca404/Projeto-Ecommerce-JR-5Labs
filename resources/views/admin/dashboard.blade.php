@@ -19,7 +19,7 @@
                 <h4>Lista de Vendedores</h4>
             </div>
         </a>
-        <a class="col-12 col-md-3 mb-4 text-dark text-decoration-none" href="#">
+        <a class="col-12 col-md-3 mb-4 text-dark text-decoration-none" href="/admin/produtos">
             <div class="border rounded p-2 py-4 text-center">
                 <i class="fa-solid fa-cart-shopping mb-3" style="font-size: 60px"></i>
                 <h4>Lista de Produtos</h4>

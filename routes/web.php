@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompradorController;
+use App\Http\Controllers\ProdutoController;
+use App\Http\Controllers\VendedorController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -69,6 +71,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/vendedores', [AdminController::class, 'vendedores'])
             ->name('admin/vendedores');
 
+        Route::get('/admin/produtos', [AdminController::class, 'produtos'])
+            ->name('admin/produtos');
+
         Route::get('/admin/decisionStatusVendedor/{id}/{decision}', 
             [AdminController::class, 'decisionStatusVendedor'])->name('admin/decisionStatusVendedor');
             
@@ -78,12 +83,18 @@ Route::middleware('auth')->group(function () {
         Route::redirect('/', '/comprador/dashboard');
         Route::redirect('/comprador', '/comprador/dashboard');
 
-        Route::get('/comprador/dashboard', function(){
-            return view('comprador/dashboard');
-        })->name('comprador/dashboard');
+        Route::get('/comprador/dashboard', [CompradorController::class, 'dashboard'])
+            ->name('comprador/dashboard');
 
         Route::get('/comprador/perfil', [CompradorController::class, 'perfil'])
             ->name('comprador/perfil');
+
+        Route::get('/produto/{id}', [ProdutoController::class, 'show']);
+
+        Route::get('/buy/{id}', [CompradorController::class, 'buy']);
+
+        Route::get('/comprador/minhas-compras', [CompradorController::class, 'myOrders'])
+            ->name('comprador/minhas-compras');
 
         Route::patch('/comprador/perfil', [CompradorController::class, 'update']);
         Route::post('/updatePassword', [CompradorController::class, 'updatePassword']);
@@ -93,9 +104,8 @@ Route::middleware('auth')->group(function () {
         Route::redirect('/', '/vendedor/dashboard');
         Route::redirect('/vendedor', '/vendedor/dashboard');
 
-        Route::get('/vendedor/dashboard', function(){
-            return view('vendedor/dashboard');
-        })->name('vendedor/dashboard');
+        Route::get('/vendedor/dashboard', [VendedorController::class, 'dashboard'])
+            ->name('vendedor/dashboard');
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Produto;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -22,6 +23,15 @@ class AdminController extends Controller
 
         return view('/admin/vendedores', [
             "vendedores" => $vendedores
+        ]);
+    }
+
+    public function produtos(Request $request)
+    {
+        $produtos = Produto::all('name','price', 'category');
+
+        return view('/admin/produtos', [
+            "produtos" => $produtos
         ]);
     }
 
