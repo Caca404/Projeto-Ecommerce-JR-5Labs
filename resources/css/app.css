@@ -1,2 +1,10 @@
 /* Bootstrap */
 @import 'bootstrap/dist/css/bootstrap';
+
+
+.withRemove{
+    position: relative;
+    right: 12%;
+    top: -44%;
+    cursor: pointer;
+}

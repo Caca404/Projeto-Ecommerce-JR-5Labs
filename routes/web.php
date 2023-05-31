@@ -106,6 +106,15 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/vendedor/dashboard', [VendedorController::class, 'dashboard'])
             ->name('vendedor/dashboard');
+
+        Route::get('/vendedor/minhas-vendas', [VendedorController::class, 'minhasVendas'])
+            ->name('vendedor/minhas-vendas');
+
+        Route::get('/produto/create', [ProdutoController::class, 'produto']);
+        Route::post('/produto/create', [ProdutoController::class, 'createProduto']);
+
+        Route::get('/produto/edit/{id}', [ProdutoController::class, 'produto']);
+        Route::post('/produto/edit/{id}', [ProdutoController::class, 'editProduto']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);

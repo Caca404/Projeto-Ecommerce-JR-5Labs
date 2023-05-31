@@ -16,9 +16,12 @@
         @elseif (!empty($produtos))    
             @foreach ($produtos as $produto)
                 <div class="col-12 col-md-3 mb-3 mb-md-0">
-                    <a href="#" class="text-dark text-decoration-none">
+                    <a href="/produto/edit/{{$produto->id}}" class="text-dark text-decoration-none">
                         <div class="card">
-                            <div class="card-header"></div>
+                            @if($produto->imagems->count())
+                                <img src="/images/products/{{$produto->imagems->last()->name.'.'.$produto->imagems->last()->mime}}" 
+                                    alt="Imagem produto" class="card-img-top" width="70">
+                            @endif
                             <div class="card-body text-center">
                                 <h5>{{ucfirst($produto->name)}}</h5>
                                 <span>R$ {{ number_format($produto->price, 2, ',', '.')}}</span>
