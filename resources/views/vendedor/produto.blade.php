@@ -17,11 +17,12 @@
                     <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="false">
                         <div class="carousel-inner">
                             @foreach ($produto->imagems as $image)
-                                <div class="carousel-item {{$loop->index == 0 ? 'active' : ''}}" 
+                                <div class="carousel-item 
+                                    {{$loop->index == 0 ? 'active' : ''}}" 
                                     data-item="{{$loop->index}}">
 
                                     <img src="/images/products/{{$image->name.'.'.$image->mime}}" 
-                                        alt="Imagem produto" class="w-75">
+                                        alt="Imagem produto" class="d-block w-75 mx-auto">
                                 </div>
                             @endforeach
                             <div id="hasNotImage" class="carousel-item bg-secondary text-white text-center p-2">

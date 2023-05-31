@@ -6,6 +6,7 @@ use App\Http\Requests\UpdateCompradorRequest;
 use App\Models\Compra;
 use App\Models\Produto;
 use App\Models\User;
+use App\Models\Venda;
 use App\Models\Vendedor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,7 @@ class CompradorController extends Controller
 
     public function dashboard(Request $request)
     {
-        $produtos = Produto::all(['id', 'name', 'price']);
+        $produtos = Produto::with('imagems')->get();
 
         return view('comprador/dashboard', ["produtos" => $produtos]);
     }
@@ -79,7 +80,7 @@ class CompradorController extends Controller
         
         $vendedor = $produto->vendedor;
 
-        $comprador->produtos()->save($produto);
+        $comprador->produtos()->attach($produto, ['cost' => $produto->price]);
 
         $comprador->credits -= $produto->price;
         $vendedor->credits += $produto->price;
@@ -93,7 +94,6 @@ class CompradorController extends Controller
     public function myOrders(Request $request)
     {
         $compras = Auth::user()->comprador->produtos;
-        // $compras = Compra::where('comprador_id', Auth::user()->comprador->id)->get();
 
         return view('comprador/minhasCompras', ["compras" => $compras]);
     }

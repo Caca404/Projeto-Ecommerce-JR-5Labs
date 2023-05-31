@@ -13,20 +13,27 @@
             <div class="col-12 col-md-8 mb-3 mb-md-0">
                 <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-interval="false">
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        @foreach ($produto->imagems as $imagem)
+                          <button type="button" data-bs-target="#carouselExampleControlsNoTouching" 
+                            data-bs-slide-to="{{$loop->index}}" class="active" 
+                            aria-current="true" aria-label="Slide {{$loop->index+1}}"></button>
+                        @endforeach
                       </div>
                     <div class="carousel-inner">
-                      <div class="carousel-item active">
-                        <img src="https://picsum.photos/600/400" class="d-block w-100" alt="...">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="https://picsum.photos/600/400" class="d-block w-100" alt="...">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="https://picsum.photos/600/400" class="d-block w-100" alt="...">
-                      </div>
+                      @if($produto->imagems->count())
+                        @foreach ($produto->imagems as $imagem)
+                          <div class="carousel-item bg-secondary 
+                            {{$loop->index == $produto->imagems->count()-1 ? 'active' : ''}}">
+                            
+                            <img src="/images/products/{{$imagem->name.'.'.$imagem->mime}}" 
+                              class="d-block w-75 mx-auto">
+                          </div>
+                        @endforeach
+                      @else
+                        <div class="carousel-item">
+                          <img src="https://picsum.photos/600/400" class="d-block w-100" alt="...">
+                        </div>
+                      @endif
                     </div>
                     <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>

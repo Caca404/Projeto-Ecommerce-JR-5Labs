@@ -20,14 +20,25 @@
                                     </span>
                                 </div>
                                 <div class="card-body row">
-                                    <img class="col-12 col-md-2" src="https://picsum.photos/600/600" alt="">
+                                    @if($produto->imagems->count())
+                                        <img class="col-12 col-md-2" 
+                                            src="/images/products/{{$produto->imagems->last()->name.'.'.$produto->imagems->last()->mime}}" 
+                                            alt="">
+                                    @else
+                                        <img class="col-12 col-md-2" src="https://picsum.photos/600/600" alt="">
+                                    @endif
                                     <div class="col-12 col-md-6 mt-2 mt-md-0">
                                         <div>
                                             <h4 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
                                                 {{ucfirst($produto->name)}}
                                             </h4>
                                         </div>
-                                        <h5 class="fw-normal">R$ {{number_format($produto->price, 2, ',', '.')}}</h5>
+                                        <h5 class="fw-normal">R$ {{number_format($produto->pivot->cost, 2, ',', '.')}}</h5>
+                                        <span class="fst-italic">
+                                            Vendido por:
+                                            <i class="fa-solid fa-store text-secondary"></i>
+                                            {{$produto->vendedor->user->name}}
+                                        </span>
                                     </div>
                                     <div class="col-12 col-md-4 mt-3 mt-md-0 row align-items-center">
                                         <button class="btn btn-outline-dark w-100 p-3">Ver produto</button>

@@ -24,7 +24,8 @@ class Produto extends Model
     
     public function compradors()
     {
-        return $this->belongsToMany(Comprador::class)->withTimestamps();
+        return $this->belongsToMany(Comprador::class)
+            ->withPivot('cost')->withTimestamps();
     }
 
     public function imagems()
