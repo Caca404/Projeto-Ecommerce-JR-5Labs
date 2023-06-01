@@ -110,7 +110,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/vendedor/minhas-vendas', [VendedorController::class, 'minhasVendas'])
             ->name('vendedor/minhas-vendas');
 
-        Route::get('/produto/create', [ProdutoController::class, 'produto']);
+        Route::get('/produto', [ProdutoController::class, 'produto']);
         Route::post('/produto/create', [ProdutoController::class, 'createProduto']);
 
         Route::get('/produto/edit/{id}', [ProdutoController::class, 'produto']);

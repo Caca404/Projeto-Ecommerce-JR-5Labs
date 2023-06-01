@@ -7,22 +7,10 @@ use App\Models\Produto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use App\Utils\Utils;
 
 class ProdutoController extends Controller
 {
-    public const categorias = [
-        "smartphones", "laptops",
-        "fragrances","skincare",
-        "groceries","home-decoration",
-        "furniture","tops","womens-dresses",
-        "womens-shoes","mens-shirts",
-        "mens-shoes","mens-watches",
-        "womens-watches","womens-bags",
-        "womens-jewellery","sunglasses",
-        "automotive","motorcycle",
-        "lighting"
-    ];
-
     public function produto(Request $request)
     {
         $produto = [];
@@ -33,7 +21,7 @@ class ProdutoController extends Controller
         
         return view('vendedor/produto', [
             'produto' => $produto, 
-            'categorias' => self::categorias
+            'categorias' => Utils::categorias
         ]);
     }
 
@@ -52,7 +40,7 @@ class ProdutoController extends Controller
             'price' => 'required|numeric',
             'category' => [
                 'required',
-                Rule::in(self::categorias)
+                Rule::in(Utils::categorias)
             ],
             'description' => 'required|max:3000',
             'images' => 'required|array|max:3|min:1',
@@ -96,7 +84,7 @@ class ProdutoController extends Controller
             'price' => 'required|numeric',
             'category' => [
                 'required',
-                Rule::in(self::categorias)
+                Rule::in(Utils::categorias)
             ],
             'description' => 'required|max:3000',
             'images' => 'array|max:3',

@@ -8,6 +8,7 @@ use App\Models\Produto;
 use App\Models\User;
 use App\Models\Venda;
 use App\Models\Vendedor;
+use App\Utils\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,41 +16,35 @@ use Illuminate\Validation\Rules\Password;
 
 class CompradorController extends Controller
 {
-    public const states = [
-        "AC" => "Acre", 
-        "AL" => "Alagoas", 
-        "AP" => "Amapá", 
-        "AM" => "Amazonas", 
-        "BA" => "Bahia",
-        "CE" => "Ceará", 
-        "DF" => "Distrito Federal", 
-        "ES" => "Espirito Santo", 
-        "GO" => "Goiás", 
-        "MA" => "Maranhão",
-        "MT" => "Mato Grosso", 
-        "MS" => "Mato Grosso do Sul", 
-        "MG" => "Minas Gerais", 
-        "PA" => "Pará", 
-        "PB" => "Paraíba",
-        "PR" => "Paraná", 
-        "PE" => "Pernambuco", 
-        "PI" => "Piauí", 
-        "RJ" => "Rio de Janeiro", 
-        "RN" => "Rio Grande do Norte",
-        "RS" => "Rio Grande do Sul", 
-        "RO" => "Rondônia", 
-        "RR" => "Roraima", 
-        "SC" => "Santa Catarina", 
-        "SP" => "São Paulo",
-        "SE" => "Sergipe",
-        "TO" => "Tocantins"
-    ];
-
     public function dashboard(Request $request)
     {
-        $produtos = Produto::with('imagems')->get();
+        
+        if(gettype($request->category) == "string")
+            $request->category = json_decode($request->category);
 
-        return view('comprador/dashboard', ["produtos" => $produtos]);
+
+        $whereArray = [];
+
+        if(!empty($request->smallerPrice))
+            $whereArray[] = ['price', '>=', $request->smallerPrice];
+
+        if(!empty($request->biggerPrice))
+            $whereArray[] = ['price', '<=', $request->biggerPrice];
+
+        if(!empty($request->name))
+            $whereArray[] = ['name', 'LIKE', '%'.$request->name."%"];
+
+        $produtos = Produto::where($whereArray)
+        ->whereIn('category', !empty($request->category) ?
+            (is_array($request->category) ? [...$request->category] : [$request->category]) : 
+            [...Utils::categorias])
+        ->with('imagems')->get();
+
+        return view('comprador/dashboard', [
+            "produtos" => $produtos,
+            'categorias' => Utils::categorias,
+            'isRequestEmpty' => empty($whereArray) && empty($request->category)
+        ]);
     }
 
     public function perfil(Request $request){
@@ -60,10 +55,10 @@ class CompradorController extends Controller
             "email" => $user->email,
             "cpf" => $user->comprador->cpf,
             "birth_date" => $user->comprador->birth_date,
-            "state" => self::states[$user->comprador->state],
+            "state" => Utils::states[$user->comprador->state],
             "stateUF" => $user->comprador->state,
             "city" => $user->comprador->city,
-            "states" => self::states
+            "states" => Utils::states
         ]);
     }
 
@@ -93,9 +88,89 @@ class CompradorController extends Controller
 
     public function myOrders(Request $request)
     {
-        $compras = Auth::user()->comprador->produtos;
+        if(gettype($request->category) == "string")
+            $request->category = json_decode($request->category);
 
-        return view('comprador/minhasCompras', ["compras" => $compras]);
+            
+        $whereProduto = [];
+        if(!empty($request->name))
+            $whereProduto[] = ['name', 'LIKE', '%'.$request->name."%"];
+
+
+        $whereProdutoPivot = [];
+        if(!empty($request->smallerPrice))
+            $whereProdutoPivot[] = ['>=', $request->smallerPrice];
+
+        if(!empty($request->biggerPrice))
+            $whereProdutoPivot[] = ['<=', $request->biggerPrice];
+
+
+        $categories = null;
+        if(!empty($request->category)){
+            if(is_array($request->category)) $categories = [...$request->category];
+            else $categories = [$request->category];
+        }
+        else $categories = [...Utils::categorias];
+
+
+        if(empty($whereProduto) && empty($whereProdutoPivot)) {
+            $compras = Auth::user()->comprador->produtos()
+                ->whereIn('category', $categories);  
+        }
+
+        if(!empty($whereProduto) && !empty($whereProdutoPivot)){
+            if(count($whereProdutoPivot) > 1){
+                
+                $compras = Auth::user()->comprador->produtos()
+                    ->where($whereProduto)
+                    ->wherePivotBetween('cost', [
+                        $whereProdutoPivot[0][1],
+                        $whereProdutoPivot[1][1]
+                    ])
+                    ->whereIn('category', $categories)
+                    ->get();
+            }
+            else{
+                $compras = Auth::user()->comprador->produtos()
+                    ->where($whereProduto)
+                    ->wherePivot('cost', $whereProdutoPivot[0][0], $whereProdutoPivot[0][1])
+                    ->whereIn('category', $categories)
+                    ->get();
+            }
+        }
+        else{
+            if(!empty($whereProduto)){
+                $compras = Auth::user()->comprador->produtos()
+                    ->where($whereProduto)
+                    ->whereIn('category', $categories)
+                    ->get();
+            }
+
+            if(!empty($whereProdutoPivot)){
+                if(count($whereProdutoPivot) > 1){
+                    $compras = Auth::user()->comprador->produtos()
+                        ->wherePivotBetween('cost', [
+                            $whereProdutoPivot[0][1],
+                            $whereProdutoPivot[1][1]
+                        ])
+                        ->whereIn('category', $categories)
+                        ->get();
+                }
+                else{
+                    $compras = Auth::user()->comprador->produtos()
+                        ->wherePivot('cost', $whereProdutoPivot[0][0], $whereProdutoPivot[0][1])
+                        ->whereIn('category', $categories)
+                        ->get();
+                }
+            }
+        }
+
+        return view('comprador/minhasCompras', [
+            "compras" => $compras,
+            "categorias" => Utils::categorias,
+            "isRequestEmpty" => empty($whereProduto) && empty($whereProdutoPivot) 
+                && empty($request->category)
+        ]);
     }
 
     public function update(UpdateCompradorRequest $request, User $user)

@@ -1,10 +1,16 @@
 /* Bootstrap */
 @import 'bootstrap/dist/css/bootstrap';
 
+@import 'choices.js/public/assets/styles/choices';
 
-.withRemove{
-    position: relative;
-    right: 12%;
-    top: -44%;
-    cursor: pointer;
+@import url('./editProduto.css');
+
+.bg-navy{
+    background-color: rgb(6, 6, 92);
+    border-color: rgb(6, 6, 92);
+    color: white;
+}
+
+.align-cards .card-body{
+    flex-grow: 0;
 }

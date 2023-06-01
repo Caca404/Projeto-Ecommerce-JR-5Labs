@@ -50,7 +50,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="name">Nome</label>
                         <input type="text" class="form-control" name="name" id="name" 
-                            value="{{ old('name') ?? $produto->name }}" required>
+                            value="{{ (old('name') ?? $produto->name ?? '') }}" required>
                         @error('name')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -61,7 +61,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="price">Preço</label>
                         <input type="number" class="form-control" name="price" id="price" min="1.00"
-                            step="0.5" value="{{ old('price') ?? $produto->price }}" required>
+                            step="0.5" value="{{ (old('price') ?? $produto->price ?? '') }}" required>
                         @error('price')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -75,7 +75,7 @@
                             <option value="" disabled selected>Selecione uma categoria</option>
                             @foreach ($categorias as $categoria)
                                 <option value="{{$categoria}}" 
-                                    {{ old('category') ?? $produto->category == $categoria ? 'selected' : '' }}>
+                                    {{ (old('category') ?? $produto->category ?? '') == $categoria ? 'selected' : '' }}>
                                     {{$categoria}}
                                 </option>
                             @endforeach
@@ -103,7 +103,7 @@
                         <label for="description">Descrição</label>
                         <textarea name="description" id="description" cols="30" rows="5" 
                             class="form-control @error('description') is-invalid @enderror" 
-                            required>{{ old('description') ?? $produto->description }}</textarea>
+                            required>{{ (old('description') ?? $produto->description ?? '') }}</textarea>
 
                         @error('description')
                             <span class="invalid-feedback" role="alert">
