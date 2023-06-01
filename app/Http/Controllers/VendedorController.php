@@ -7,6 +7,7 @@ use App\Models\Vendedor;
 use App\Utils\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 
 class VendedorController extends Controller
@@ -42,10 +43,11 @@ class VendedorController extends Controller
                     [...Utils::categorias])
                 ->get();
         }
-        
+
+
         return view('vendedor/dashboard', [
             'produtos' => $produtos,
-            'categorias' => [...Utils::categorias],
+            'categorias' => Utils::categorias,
             "isRequestEmpty" => empty($whereProduto) && empty($whereProdutoPivot) 
                 && empty($request->category)
         ]);

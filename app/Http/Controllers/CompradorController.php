@@ -110,12 +110,13 @@ class CompradorController extends Controller
             if(is_array($request->category)) $categories = [...$request->category];
             else $categories = [$request->category];
         }
-        else $categories = [...Utils::categorias];
+        else $categories = Utils::categorias;
 
 
         if(empty($whereProduto) && empty($whereProdutoPivot)) {
             $compras = Auth::user()->comprador->produtos()
-                ->whereIn('category', $categories);  
+                ->whereIn('category', $categories)
+                ->get();  
         }
 
         if(!empty($whereProduto) && !empty($whereProdutoPivot)){

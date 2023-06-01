@@ -82,7 +82,7 @@
                         <div class="card h-100">
                             @if($produto->imagems->count())
                                 <div class="flex-fill d-flex">
-                                    <img src="/images/products/{{$produto->imagems->last()->name.'.'.$produto->imagems->last()->mime}}" 
+                                    <img src="{{$produto->imagems->last()->path}}" 
                                         alt="Imagem produto" class="card-img-top">
                                 </div>
                             @endif

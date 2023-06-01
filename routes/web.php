@@ -5,8 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompradorController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\VendedorController;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*

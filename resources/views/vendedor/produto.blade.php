@@ -21,7 +21,7 @@
                                     {{$loop->index == 0 ? 'active' : ''}}" 
                                     data-item="{{$loop->index}}">
 
-                                    <img src="/images/products/{{$image->name.'.'.$image->mime}}" 
+                                    <img src="{{$image->path}}" 
                                         alt="Imagem produto" class="d-block w-75 mx-auto">
                                 </div>
                             @endforeach
@@ -32,12 +32,12 @@
                     </div>
                     <div class="row mt-3 g-3">
                         @foreach ($produto->imagems as $image)
-                            <div class="col-4">
+                            <div class="col-4 d-flex align-items-stretch">
                                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{$loop->index}}"
                                     class="btn border" aria-current="true" aria-label="Slide {{$loop->index+1}}">
-                                    <img width="70" src="/images/products/{{$image->name.'.'.$image->mime}}" alt="img {{$loop->index+1}}">
+                                    <img width="70" src="{{$image->path}}" alt="img {{$loop->index+1}}">
                                 </button>
-                                <i class="fa-solid fa-circle-xmark text-danger withRemove fa-xl"
+                                <i class="fa-solid fa-circle-xmark text-danger withRemove fa-xl" style="height: 0"
                                     onclick="removeImg({{$loop->index}})"></i>
                             </div>
                         @endforeach

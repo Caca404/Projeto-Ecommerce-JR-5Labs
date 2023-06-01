@@ -74,13 +74,10 @@
                                     </span>
                                 </div>
                                 <div class="card-body row">
-                                    @if($produto->imagems->count())
-                                        <img class="col-12 col-md-2" 
-                                            src="/images/products/{{$produto->imagems->last()->name.'.'.$produto->imagems->last()->mime}}" 
-                                            alt="">
-                                    @else
-                                        <img class="col-12 col-md-2" src="https://picsum.photos/600/600" alt="">
-                                    @endif
+                                    <img class="col-12 col-md-2" 
+                                        src="{{$produto->imagems->last()->path}}" 
+                                        alt="">
+
                                     <div class="col-12 col-md-6 mt-2 mt-md-0">
                                         <div>
                                             <h4 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">

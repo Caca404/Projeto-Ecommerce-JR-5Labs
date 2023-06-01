@@ -17,15 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             CompradorSeeder::class,
-            VendedorSeeder::class,
-            ProdutoSeeder::class
+            VendedorSeeder::class
         ]);
-
-        // \App\Models\Admin::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

@@ -15,8 +15,8 @@ class CompradorSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Comprador::factory(5)
-            ->has(Produto::factory()->count(2))
-            ->create();
+        // \App\Models\Comprador::factory(5)
+        //     ->has(Produto::factory()->count(2))
+        //     ->create();
     }
 }

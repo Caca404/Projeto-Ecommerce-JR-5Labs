@@ -11,8 +11,7 @@ class Imagem extends Model
 
     protected $fillable = [
         'produto_id',
-        'name',
-        'mime'
+        'path'
     ];
 
     public function produto()
