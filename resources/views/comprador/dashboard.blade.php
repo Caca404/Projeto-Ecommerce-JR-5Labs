@@ -11,7 +11,7 @@
     @endif
     <h3>Bem vindo ao Project Ecommerce!</h3>
     <hr class="mb-5 mt-3">
-    <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosCompradorDashboard">
+    <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosProdutos">
         <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
             aria-expanded="false" aria-controls="collapseExample">
 

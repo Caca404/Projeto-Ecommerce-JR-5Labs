@@ -6,7 +6,7 @@
     <div class="container">
         <h3>Minhas Compras</h3>
         <hr class="mb-5 mt-3">
-        <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosCompradorDashboard">
+        <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosProdutos">
             <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
                 aria-expanded="false" aria-controls="collapseExample">
     
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="row g-3">
-            @if(!empty($compras))
+            @if(count($compras))
                 @foreach ($compras as $produto)
                     <div class="col-12 col-md-8 mx-auto">
                         <a href="/produto/{{$produto->id}}" class="text-dark text-decoration-none">
@@ -99,6 +99,16 @@
                         </a>
                     </div>
                 @endforeach
+            @elseif(!$isRequestEmpty)
+                <div class="col-12 col-md-8 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <span>
+                                Nenhum pedido está de acordo com o filtro.
+                            </span>
+                        </div>
+                    </div>
+                </div>
             @else
                 <div class="col-12 col-md-8 mx-auto">
                     <div class="card">

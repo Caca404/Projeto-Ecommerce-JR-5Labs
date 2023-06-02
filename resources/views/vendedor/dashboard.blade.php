@@ -5,66 +5,64 @@
 @section('content')
 <div class="container">
     @if (Auth::user()->vendedor->status == "A" && !empty($produtos))
-        <div class="mb-5">
-            <div class="card col-12 col-md-8 mx-auto" id="filtrosCompradorDashboard">
-                <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
-                    aria-expanded="false" aria-controls="collapseExample">
+        <div class="card col-12 col-md-8 mx-auto" id="filtrosProdutos">
+            <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
+                aria-expanded="false" aria-controls="collapseExample">
 
-                    <div class="card-header rounded-top bg-dark p-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0">Filtros</h4>
+                <div class="card-header rounded-top bg-dark p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Filtros</h4>
 
-                            <i class="fa-solid fa-plus"></i>
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                </div>
+            </a>
+            <div class="card-body collapse @if(!$isRequestEmpty) show @endif" id="collapseExample">
+
+                <form class="row g-3">
+                    <div class="col-12">
+                        <label for="name">Nome do produto</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                            placeholder="Pesquisar nome do produto" value="{{app('request')->input('name')}}">
+                    </div>
+                    <div class="col-12 col-md-6 row g-3">
+                        <div class="col-12 mb-3">
+                            <label for="smallerPrice">Menor preço</label>
+                            <input type="number" class="form-control" min="1" id="smallerPrice"
+                                name="smallerPrice" value="{{app('request')->input('smallerPrice')}}">
+                            
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="biggerPrice">Maior preço</label>
+                            <input type="number" class="form-control" min="1" 
+                                max="1000000" id="biggerPrice" name="biggerPrice" 
+                                value="{{app('request')->input('biggerPrice')}}">
                         </div>
                     </div>
-                </a>
-                <div class="card-body collapse @if(!$isRequestEmpty) show @endif" id="collapseExample">
-
-                    <form class="row g-3">
-                        <div class="col-12">
-                            <label for="name">Nome do produto</label>
-                            <input type="text" class="form-control" id="name" name="name" 
-                                placeholder="Pesquisar nome do produto" value="{{app('request')->input('name')}}">
+                    <div class="col-12 col-md-6 row g-3">
+                        <div class="mb-3">
+                            <label for="category">Categorias</label>
+                            <select name="category[]" id="category" class="selectize" multiple>
+                                @foreach ($categorias as $categoria)
+                                    <option value="{{$categoria}}" @if(!empty(json_decode(app('request')->input('category')))) {{
+                                        in_array($categoria, json_decode(app('request')->input('category'))) ? 'selected' : ''
+                                    }} @endif>
+                                        {{$categoria}}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="col-12 col-md-6 row g-3">
-                            <div class="col-12 mb-3">
-                                <label for="smallerPrice">Menor preço</label>
-                                <input type="number" class="form-control" min="1" id="smallerPrice"
-                                    name="smallerPrice" value="{{app('request')->input('smallerPrice')}}">
-                                
-                            </div>
-                            <div class="col-12 mb-3">
-                                <label for="biggerPrice">Maior preço</label>
-                                <input type="number" class="form-control" min="1" 
-                                    max="1000000" id="biggerPrice" name="biggerPrice" 
-                                    value="{{app('request')->input('biggerPrice')}}">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 row g-3">
-                            <div class="mb-3">
-                                <label for="category">Categorias</label>
-                                <select name="category[]" id="category" class="selectize" multiple>
-                                    @foreach ($categorias as $categoria)
-                                        <option value="{{$categoria}}" @if(!empty(json_decode(app('request')->input('category')))) {{
-                                            in_array($categoria, json_decode(app('request')->input('category'))) ? 'selected' : ''
-                                        }} @endif>
-                                            {{$categoria}}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button class="btn btn-secondary w-100">Filtrar</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-secondary w-100">Filtrar</button>
+                    </div>
+                </form>
             </div>
-            <a href="/produto" class="btn btn-primary mt-5 col-12 col-md-3 offset-md-7">
-                <i class="fa-solid fa-plus"></i>
-                Adicionar produtos
-            </a>
         </div>
+        <a href="/produto" class="btn btn-primary my-5 col-12 col-md-3 offset-md-7">
+            <i class="fa-solid fa-plus"></i>
+            Adicionar produtos
+        </a>
     @endif
 
     <div class="row align-cards g-3">

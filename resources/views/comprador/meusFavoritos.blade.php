@@ -7,7 +7,7 @@
         <h3>Meus Favoritos</h3>
         <hr class="mb-5 mt-3">
         <div class="row g-3">
-            @if(!empty($produtos))
+            @if(count($produtos))
                 @foreach ($produtos as $produto)
                     <div class="col-12 col-md-8 mx-auto">
                         <div class="card">

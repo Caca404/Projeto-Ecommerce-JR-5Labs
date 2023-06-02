@@ -92,7 +92,7 @@
                             <div class="row">
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="cpf" class="col-form-label">{{ __('CPF') }}</label>
-                                    <input id="cpf" type="text" max="11" class="form-control @error('cpf') is-invalid @enderror" 
+                                    <input id="cpf" type="text" maxlength="11" class="form-control @error('cpf') is-invalid @enderror" 
                                         value="{{ old('cpf') }}" name="cpf" {{ old('typeUser') == 'comprador' ? 'required' : '' }} 
                                         autocomplete="cpf">
 
