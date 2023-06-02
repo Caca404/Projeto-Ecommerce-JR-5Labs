@@ -30,9 +30,8 @@ Route::group(['middleware' => ['guest']], function () {
     })->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
-    Route::get('/register', function() {
-        return view('auth/register');
-    })->name('register');
+    Route::get('/register', [AuthController::class, 'viewRegister'])
+        ->name('register');
     Route::post('/register', [AuthController::class, 'store']);
 
 
@@ -77,6 +76,7 @@ Route::middleware('auth')->group(function () {
             
     });
 
+
     Route::group(['middleware' => ['comprador']], function () {
         Route::redirect('/', '/comprador/dashboard');
         Route::redirect('/comprador', '/comprador/dashboard');
@@ -96,7 +96,13 @@ Route::middleware('auth')->group(function () {
 
         Route::patch('/comprador/perfil', [CompradorController::class, 'update']);
         Route::post('/updatePassword', [CompradorController::class, 'updatePassword']);
+
+        Route::get('/favoritar/{id}/{decision}', [CompradorController::class, 'favoritar']);
+
+        Route::get('/comprador/meus-favoritos', [CompradorController::class, 'myFavorites'])
+            ->name('comprador/meus-favoritos');
     });
+
 
     Route::group(['middleware' => ['vendedor']], function () {
         Route::redirect('/', '/vendedor/dashboard');

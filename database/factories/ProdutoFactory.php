@@ -33,7 +33,8 @@ class ProdutoFactory extends Factory
                 "womens-jewellery","sunglasses",
                 "automotive","motorcycle",
                 "lighting"
-            ])
+            ]),
+            'visualization' => fake()->randomNumber(3)
         ];
     }
 }

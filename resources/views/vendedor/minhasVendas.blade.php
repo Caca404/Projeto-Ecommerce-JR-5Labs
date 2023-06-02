@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Minhas vendas')
 
 @section('content')
     <div class="container">
-        <h3>Produtos</h3>
+        <h3>Minhas vendas</h3>
         <hr class="mb-5 mt-3">
         <div class="row g-3">
             @if(!empty($vendas))

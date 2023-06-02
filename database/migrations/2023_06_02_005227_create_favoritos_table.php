@@ -13,14 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('compradors', function (Blueprint $table) {
+        Schema::create('favoritos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('cpf', 11)->unique();
-            $table->date('birth_date');
-            $table->string('state');
-            $table->string('city');
-            $table->float('credits');
+            $table->foreignId('produto_id')->constrained('produtos');
+            $table->foreignId('comprador_id')->constrained('compradors');
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('compradors');
+        Schema::dropIfExists('favoritos');
     }
 };

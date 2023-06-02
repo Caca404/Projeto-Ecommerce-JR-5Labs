@@ -4,16 +4,20 @@
 
 @section('content')
 <div class="container">
-    <h2>Bem vindo ao Project Ecommerce!</h2>
+    @if (session('status'))
+        <div class="alert alert-success mb-3" role="alert">
+            {{ session('status') }}
+        </div>
+    @endif
+    <h3>Bem vindo ao Project Ecommerce!</h3>
     <hr class="mb-5 mt-3">
     <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosCompradorDashboard">
-        <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseExample" role="button" 
+        <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
             aria-expanded="false" aria-controls="collapseExample">
 
-            <div class="card-header bg-navy p-3">
+            <div class="card-header bg-dark p-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Filtros</h4>
-
                     <i class="fa-solid fa-plus"></i>
                 </div>
             </div>
@@ -24,7 +28,8 @@
                 <div class="col-12">
                     <label for="name">Nome do produto</label>
                     <input type="text" class="form-control" id="name" name="name" 
-                        placeholder="Pesquisar nome do produto" value="{{app('request')->input('name')}}">
+                        placeholder="Pesquisar nome do produto" 
+                        value="{{app('request')->input('name')}}">
                 </div>
                 <div class="col-12 col-md-6 row g-3">
                     <div class="col-12 mb-3">
@@ -55,7 +60,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <button class="btn btn-primary w-100">Filtrar</button>
+                    <button class="btn btn-secondary w-100">Filtrar</button>
                 </div>
             </form>
         </div>
@@ -65,7 +70,7 @@
             @foreach ($produtos as $produto)
                 <div class="col-12 col-md-3 mb-3 mb-md-0 d-flex align-items-stretch">
                     <a href="/produto/{{$produto->id}}" class="text-dark text-decoration-none w-100">
-                        <div class="card h-100">
+                        <div class="card h-100 shadow-sm">
                             @if($produto->imagems->count())
                                 <div class="flex-fill d-flex">
                                     <img src="{{$produto->imagems->last()->path}}" 

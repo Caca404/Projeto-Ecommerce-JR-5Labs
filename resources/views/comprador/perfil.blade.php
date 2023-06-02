@@ -1,12 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Perfil')
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Perfil</h2>
+    <h3 class="mb-4">Perfil</h3>
+    <hr class="mb-5 mt-3">
     <div class="row">
-        <div class="d-flex flex-row flex-wrap border rounded p-3">
+        <div class="shadow-sm d-flex flex-row flex-wrap border rounded p-3">
             <div class="flex-row col-12 col-md-8 pe-3">
                 <div class="row">
                     <div class="mb-3 col-12 col-md-6">
@@ -52,7 +53,7 @@
                 <button class="btn btn-primary col-12 mb-3" data-bs-toggle="modal"
                     data-bs-target="#editPerfil">Alterar Perfil</button>
 
-                <button class="btn btn-primary col-12 mb-3" data-bs-toggle="modal"
+                <button class="btn btn-danger col-12 mb-3" data-bs-toggle="modal"
                     data-bs-target="#editPassword">Alterar Senha</button>
             </div>
         </div>
@@ -64,7 +65,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editPerfilLabel">Modal title</h5>
+                    <h5 class="modal-title" id="editPerfilLabel">Alterar Perfil</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -167,7 +168,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editPasswordLabel">Modal title</h5>
+                    <h5 class="modal-title" id="editPasswordLabel">Alterar Senha</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -215,7 +216,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" onclick="document.querySelector('#editPassword form').submit()" 
-                        class="btn btn-primary w-100">Salvar Alterações</button>
+                        class="btn btn-danger w-100">Salvar Alterações</button>
                 </div>
             </div>
         </div>

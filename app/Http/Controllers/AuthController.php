@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comprador;
 use App\Models\User;
 use App\Models\Vendedor;
+use App\Utils\Utils;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,11 @@ class AuthController extends Controller
         return back()->withErrors($erros);
     }
 
+    public function viewRegister(Request $request)
+    {
+        return view('auth/register', ["states" => Utils::states]);
+    }
+
     public function logout(Request $request)
     {        
         Session::flush();
@@ -62,7 +68,7 @@ class AuthController extends Controller
         $isComprador = $request->typeUser == 'comprador';
 
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => [
                 'required',
                 PasswordRule::min(8)
@@ -72,10 +78,14 @@ class AuthController extends Controller
                     ->symbols()
             ],
             'password_confirmation' => 'required|same:password',
-            'typeUser' => 'required',
+            'typeUser' => [
+                'required',
+                Rule::in(['vendedor', 'comprador'])
+            ],
             'cpf' => [
                 Rule::requiredIf($isComprador),
-                $isComprador ? 'cpf' : ''
+                $isComprador ? 'cpf' : '',
+                $isComprador ? 'unique:compradors,cpf' : ''
             ],
             'birth_date' => [
                 Rule::requiredIf($isComprador),
@@ -126,7 +136,8 @@ class AuthController extends Controller
 
             event(new Registered($user));
 
-            return redirect()->route($user->type.'/dashboard');
+            return redirect()->route($user->type.'/dashboard')
+                ->with(['status', 'Email de verificação foi enviado ao seu email.']);
         }
     }
 
@@ -147,7 +158,15 @@ class AuthController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
+            'password' => [
+                'required',
+                'confirmed',
+                PasswordRule::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ]
         ]);
      
         $status = Password::reset(

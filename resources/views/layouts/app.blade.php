@@ -26,29 +26,16 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+                    {{-- <ul class="navbar-nav me-auto">
 
-                    </ul>
+                    </ul> --}}
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
+                        @auth
                             @if (Auth::user()->type == "admin")
                                 <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link 
+                                    <a class="nav-link 
                                         {{ Route::currentRouteName() == 'admin/compradores' ? 'active' : ''}}" 
                                         href="/admin/compradores">
 
@@ -56,53 +43,83 @@
                                     </a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link
+                                    <a class="nav-link
                                         {{ Route::currentRouteName() == 'admin/vendedores' ? 'active' : ''}}" 
                                         href="/admin/vendedores">
 
                                         Vendedores
                                     </a>
                                 </li>
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link
+                                <li class="nav-item">
+                                    <a class="nav-link
                                         {{ Route::currentRouteName() == 'admin/produtos' ? 'active' : ''}}" 
                                         href="/admin/produtos">
 
                                         Produtos
                                     </a>
                                 </li>
-                            @endif
 
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                            @elseif(Auth::user()->type == 'comprador')
+                                <li class="nav-item text-secondary">
+                                    <a href="#" class="nav-link d-flex">
+                                        <i class="fa-solid fa-user me-2"></i>
+                                        <h6 class="mb-0">R$ {{ number_format(Auth::user()->comprador->credits, 2, ',', '.')}}</h6>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link
+                                        {{ Route::currentRouteName() == 'comprador/minhas-compras' ? 'active' : ''}}" 
+                                        href="/comprador/minhas-compras">
+
+                                        Minhas Compras
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link
+                                        {{ Route::currentRouteName() == 'comprador/meus-favoritos' ? 'active' : ''}}" 
+                                        href="/comprador/meus-favoritos">
+
+                                        Meus favoritos
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link
+                                        {{ Route::currentRouteName() == 'comprador/perfil' ? 'active' : ''}}" 
+                                        href="/comprador/perfil">
+
+                                        Perfil
+                                    </a>
+                                </li>
+                            @else
+                                <li class="nav-item text-secondary">
+                                    <a href="#" class="nav-link d-flex">
+                                        <i class="fa-solid fa-user me-2"></i>
+                                        <h6 class="mb-0">R$ {{ number_format(Auth::user()->vendedor->credits, 2, ',', '.')}}</h6>
+                                    </a>
+                                </li>
+                                @if(Auth::user()->vendedor->status == 'A')
+                                    <li class="nav-item">
+                                        <a class="nav-link
+                                            {{ Route::currentRouteName() == 'vendedor/minhas-vendas' ? 'active' : ''}}" 
+                                            href="/vendedor/minhas-vendas">
+
+                                            Minhas Vendas
+                                        </a>
+                                    </li>
+                                @endif
+                            @endif
+                            <li class="nav-item">
+                                <a class="nav-link" href="/logout"
+                                    onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                                    {{ __('Sair') }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-
-                                    @if (Auth::user()->type == 'comprador')
-                                        <a class="dropdown-item" href="/comprador/perfil">
-                                            {{ __('Perfil') }}
-                                        </a>
-                                    @elseif(Auth::user()->type == 'vendedor')
-                                        @if(Auth::user()->vendedor->status != "P")
-
-                                        @endif
-
-                                    @endif
-
-                                    <a class="dropdown-item" href="/logout"
-                                    onclick="event.preventDefault();
-                                                    document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="/logout" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
+                                <form id="logout-form" action="/logout" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </li>
-                        @endguest
+                        @endauth
                     </ul>
                 </div>
             </div>

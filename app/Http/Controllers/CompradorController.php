@@ -208,4 +208,31 @@ class CompradorController extends Controller
 
         return back()->withErrors(['old_password' => "Senha incorreta."]);
     }
+
+    public function favoritar(Request $request)
+    {
+        if($request->decision == "S"){
+            $produto = Produto::find($request->id);
+            Auth::user()->comprador->produtos_favorito()->save($produto);
+        }
+        else{
+            $comprador = Auth::user()->comprador;
+
+            $comprador->produtos_favorito()->detach($request->id);
+        }
+        
+        return back()->with([
+            'status' => $request->decision == "S" ? 'Produto está na sua lista de favoritos.' :
+                "Produto foi removido da sua lista de favoritos com sucesso."
+        ]);
+    }
+
+    public function myFavorites(Request $request)
+    {
+        $produtos = Auth::user()->comprador->produtos_favorito()->get();
+
+        return view('comprador/meusFavoritos', [
+            "produtos" => $produtos,
+        ]);
+    }
 }

@@ -23,7 +23,7 @@
                     @foreach ($produtos as $produto)
                         <tr>
                             <td>{{$produto->name}}</td>
-                            <td>{{$produto->price}}</td>
+                            <td>R$ {{ number_format($produto->price, 2, ',', '.')}}</td>
                             <td>{{$produto->category}}</td>
                         </tr>
                     @endforeach

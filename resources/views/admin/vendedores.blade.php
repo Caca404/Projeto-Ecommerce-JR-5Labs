@@ -24,7 +24,7 @@
                     @foreach ($vendedores as $user)
                         <tr>
                             <td>{{$user->name}}</td>
-                            <td>{{$user->vendedor->credits}}</td>
+                            <td>R$ {{ number_format($user->vendedor->credits, 2, ',', '.')}}</td>
                             <td>
                                 {{
                                     $user->vendedor->status == 'P' ? 'Pendente' : (
@@ -47,8 +47,26 @@
                                         </button>
                                     </form>
                                 </td>
+                            @elseif($user->vendedor->status == "A")
+
+                                <td>
+                                    <form action="/admin/decisionStatusVendedor/{{$user->id}}/R" method="get">
+                                        <button class="btn btn-danger mt-md-0 mt-2">
+                                            <i class="fa-solid fa-xmark"></i>
+                                            Rejeitar
+                                        </button>
+                                    </form>
+                                </td>
+
                             @else
-                                <td></td>
+                                <td>
+                                    <form action="/admin/decisionStatusVendedor/{{$user->id}}/A" method="get">
+                                        <button class="btn btn-success">
+                                            <i class="fa-solid fa-check"></i>
+                                            Aprovar
+                                        </button>
+                                    </form>
+                                </td>
                             @endif
                         </tr>
                     @endforeach

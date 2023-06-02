@@ -4,7 +4,9 @@
 
 @section('content')
 <div class="container">
-    <div class="table-responsive">
+    <h3>Compradores</h3>
+    <hr class="mb-5 mt-3">
+    <div class="table-responsive col-12 col-md-10 mx-md-auto">
         <table class="table table-bordered table-striped">
             <thead>
                 <th>Nome</th>
@@ -18,10 +20,10 @@
                     @foreach ($compradores as $item)
                         <tr>
                             <td>{{$item->name}}</td>
-                            <td>{{$item->comprador->birth_date}}</td>
+                            <td>{{date('d/m/Y', strtotime($item->comprador->birth_date))}}</td>
                             <td>{{$item->comprador->cpf}}</td>
                             <td>{{$item->comprador->state}}</td>
-                            <td>{{$item->comprador->credits}}</td>
+                            <td>R$ {{ number_format($item->comprador->credits, 2, ',', '.')}}</td>
                         </tr>
                     @endforeach
                 @else

@@ -4,13 +4,13 @@
 
 @section('content')
 <div class="container">
-    @if (!empty($produtos))
+    @if (Auth::user()->vendedor->status == "A" && !empty($produtos))
         <div class="mb-5">
             <div class="card col-12 col-md-8 mx-auto" id="filtrosCompradorDashboard">
-                <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseExample" role="button" 
+                <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
                     aria-expanded="false" aria-controls="collapseExample">
 
-                    <div class="card-header rounded-top bg-navy p-3">
+                    <div class="card-header rounded-top bg-dark p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">Filtros</h4>
 
@@ -55,23 +55,32 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary w-100">Filtrar</button>
+                            <button class="btn btn-secondary w-100">Filtrar</button>
                         </div>
                     </form>
                 </div>
             </div>
             <a href="/produto" class="btn btn-primary mt-5 col-12 col-md-3 offset-md-7">
-                Adicionar mais produtos
+                <i class="fa-solid fa-plus"></i>
+                Adicionar produtos
             </a>
         </div>
     @endif
 
     <div class="row align-cards g-3">
         @if (Auth::user()->vendedor->status == "P")
-            <div class="col-md-8">
+            <div class="col-12 col-md-8 mx-md-auto">
                 <div class="card bg-warning">
                     <div class="card-body">
                         {{ __('O administrador irá avaliar seu perfil para usar o site.') }}
+                    </div>
+                </div>
+            </div>
+        @elseif (Auth::user()->vendedor->status == "R")   
+            <div class="col-md-8">
+                <div class="card bg-warning">
+                    <div class="card-body">
+                        {{ __('Infelizmente, você não poderá usar o site, pois rejeitado.') }}
                     </div>
                 </div>
             </div>
@@ -89,6 +98,10 @@
                             <div class="card-body text-center">
                                 <h5>{{ucfirst($produto->name)}}</h5>
                                 <span>R$ {{ number_format($produto->price, 2, ',', '.')}}</span>
+                                <div>
+                                    <i class="fa-solid fa-eye"></i>
+                                    {{$produto->visualization ? $produto->visualization : 0}}
+                                </div>
                             </div>
                         </div>
                     </a>
@@ -103,7 +116,9 @@
                                 Olá, vendedor. Deseja cadastrar seus produtos para começar
                                 sua venda?
                             </h4>
-                            <button class="btn btn-warning mt-4">Cadastrar Novo Produto</button>
+                            <button onclick="location.href='/produto'" class="btn btn-warning mt-4">
+                                Cadastrar Novo Produto
+                            </button>
                         </div>
                     </div>
                 </a>

@@ -13,6 +13,9 @@ class ProdutoController extends Controller
 {
     public function produto(Request $request)
     {
+        if(Auth::user()->vendedor->status == "P") 
+            return redirect()->route('vendedor/dashboard');
+
         $produto = [];
 
         if(!empty($request->id))
@@ -28,9 +31,19 @@ class ProdutoController extends Controller
     public function show(Request $request)
     {
         $produto = Produto::where('id', $request->id)
-            ->with('imagems')->first();
+            ->with('imagems')
+            ->first();
+        
+        $produto->visualization++;
+        $produto->save();
 
-        return view('comprador/produto', ['produto' => $produto]);
+        $isFavorited = $produto->compradors_favorito()
+            ->where('comprador_id', Auth::user()->comprador->id)->count();
+
+        return view('comprador/produto', [
+            'produto' => $produto,
+            'isFavorited' => $isFavorited > 0
+        ]);
     }
 
     public function createProduto(Request $request)
@@ -56,6 +69,7 @@ class ProdutoController extends Controller
         $produto->price = $request->price;
         $produto->category = $request->category;
         $produto->description = $request->description;
+        $produto->visualization = 0;
 
         Auth::user()->vendedor->produtos()->save($produto);
 
@@ -140,6 +154,6 @@ class ProdutoController extends Controller
 
         Auth::user()->vendedor->produtos()->save($produto);
 
-        return redirect()->back();
+        return back()->with(['status' => 'Produto editado com sucesso.']);
     }
 }

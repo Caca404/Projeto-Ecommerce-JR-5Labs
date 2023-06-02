@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Minhas compras')
 
 @section('content')
     <div class="container">
-        <h3>Produtos</h3>
+        <h3>Minhas Compras</h3>
         <hr class="mb-5 mt-3">
         <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosCompradorDashboard">
-            <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseExample" role="button" 
+            <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
                 aria-expanded="false" aria-controls="collapseExample">
     
-                <div class="card-header rounded-top bg-navy p-3">
+                <div class="card-header rounded-top bg-dark p-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">Filtros</h4>
     
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-primary w-100">Filtrar</button>
+                        <button class="btn btn-secondary w-100">Filtrar</button>
                     </div>
                 </form>
             </div>
@@ -65,7 +65,7 @@
                 @foreach ($compras as $produto)
                     <div class="col-12 col-md-8 mx-auto">
                         <a href="/produto/{{$produto->id}}" class="text-dark text-decoration-none">
-                            <div class="card">
+                            <div class="card shadow-sm">
                                 <div class="card-header bg-white text-end">
                                     <span class="fst-italic text-secondary">
                                         Data do Pedido:

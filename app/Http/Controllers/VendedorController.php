@@ -55,6 +55,9 @@ class VendedorController extends Controller
 
     public function minhasVendas(Request $request)
     {
+        if(Auth::user()->vendedor->status == "P")
+            return redirect()->route('vendedor/dashboard');
+
         $vendas = Produto::where('vendedor_id', Auth::user()->vendedor->id)
             ->with('compradors')->with('imagems')->get();
         

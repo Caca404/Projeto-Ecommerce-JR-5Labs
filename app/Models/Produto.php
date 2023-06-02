@@ -14,7 +14,8 @@ class Produto extends Model
         'name',
         'description',
         'price',
-        'category'
+        'category',
+        'visualization'
     ];
 
     public function vendedor()
@@ -26,6 +27,12 @@ class Produto extends Model
     {
         return $this->belongsToMany(Comprador::class)
             ->withPivot('cost')->withTimestamps();
+    }
+
+    public function compradors_favorito()
+    {
+        return $this->belongsToMany(Comprador::class, 'favoritos')
+            ->withTimestamps();
     }
 
     public function imagems()

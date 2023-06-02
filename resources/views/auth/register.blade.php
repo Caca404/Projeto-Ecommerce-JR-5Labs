@@ -8,7 +8,8 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form class="row" method="POST" action="{{ route('register') }}">
+                    <h4 class="border-bottom pb-3 mb-3">Crie sua conta</h4>
+                    <form class="row mb-4" method="POST" action="{{ route('register') }}">
                         @csrf
 
                         <div class="mb-3 col-12 col-md-6">
@@ -91,7 +92,7 @@
                             <div class="row">
                                 <div class="mb-3 col-12 col-md-6">
                                     <label for="cpf" class="col-form-label">{{ __('CPF') }}</label>
-                                    <input id="cpf" type="text" class="form-control @error('cpf') is-invalid @enderror" 
+                                    <input id="cpf" type="text" max="11" class="form-control @error('cpf') is-invalid @enderror" 
                                         value="{{ old('cpf') }}" name="cpf" {{ old('typeUser') == 'comprador' ? 'required' : '' }} 
                                         autocomplete="cpf">
 
@@ -121,33 +122,12 @@
                                         {{ old('typeUser') == 'comprador' ? 'required' : '' }}>
 
                                         <option value="" disabled selected>Selecione um estado</option>
-                                        <option value="AC">Acre</option>
-                                        <option value="AL">Alagoas</option>
-                                        <option value="AP">Amapá</option>
-                                        <option value="AM">Amazonas</option>
-                                        <option value="BA">Bahia</option>
-                                        <option value="CE">Ceará</option>
-                                        <option value="DF">Distrito Federal</option>
-                                        <option value="ES">Espirito Santo</option>
-                                        <option value="GO">Goiás</option>
-                                        <option value="MA">Maranhão</option>
-                                        <option value="MT">Mato Grosso</option>
-                                        <option value="MS">Mato Grosso do Sul</option>
-                                        <option value="MG">Minas Gerais</option>
-                                        <option value="PA">Pará</option>
-                                        <option value="PB">Paraíba</option>
-                                        <option value="PR">Paraná</option>
-                                        <option value="PE">Pernambuco</option>
-                                        <option value="PI">Piauí</option>
-                                        <option value="RJ">Rio de Janeiro</option>
-                                        <option value="RN">Rio Grande do Norte</option>
-                                        <option value="RS">Rio Grande do Sul</option>
-                                        <option value="RO">Rondônia</option>
-                                        <option value="RR">Roraima</option>
-                                        <option value="SC">Santa Catarina</option>
-                                        <option value="SP">São Paulo</option>
-                                        <option value="SE">Sergipe</option>
-                                        <option value="TO">Tocantins</option>
+
+                                        @foreach ($states as $sigla => $state)
+                                            <option value="{{$sigla}}" {{old('state') == $sigla ? 'selected' : ''}}>
+                                                {{$state}}
+                                            </option>
+                                        @endforeach
                                     </select>
 
                                     @error('state')
@@ -177,6 +157,10 @@
                                 {{ __('Criar Conta') }}
                             </button>
                         </div>
+                    </form>
+                    <form class="border-top mt-3 pt-4 text-center" action="/login" method="get">
+                        <h6>Já tem Login? Entre por aqui</h6>
+                        <button class="btn btn-secondary col-12 mt-3">Logar</button>
                     </form>
                 </div>
             </div>

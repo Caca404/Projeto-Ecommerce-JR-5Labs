@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', $produto->name)
 
 @section('content')
     <div class="container">
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-4 mb-3 mb-md-0 d-flex flex-column justify-content-between">
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="card-body">
                         <span class="fst-italic">
                             <i class="fa-solid fa-store text-secondary"></i>
@@ -63,8 +63,28 @@
                     <div class="card-footer bg-white mt-1">
                         <form action="/buy/{{ $produto->id }}" method="GET">
                             @csrf
-                            <button class="btn btn-warning w-100 p-2">Comprar agora</button>
+                            <button class="btn btn-warning w-100 p-2">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                                Comprar agora
+                            </button>
                         </form>
+                        
+                        @if($isFavorited)
+                            <form class="mt-3" action="/favoritar/{{ $produto->id }}/N" method="GET">
+                                @csrf
+                                <button class="btn btn-orange w-100 p-2">
+                                    Desfavoritar
+                                </button>
+                            </form>
+                        @else
+                            <form class="mt-3" action="/favoritar/{{ $produto->id }}/S" method="GET">
+                                @csrf
+                                <button class="btn btn-orange w-100 p-2">
+                                    <i class="fa-solid fa-star"></i>
+                                    Favoritar
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>

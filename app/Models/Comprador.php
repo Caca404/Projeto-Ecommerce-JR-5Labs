@@ -28,4 +28,10 @@ class Comprador extends Model
         return $this->belongsToMany(Produto::class)
             ->withPivot('cost')->withTimestamps();
     }
+
+    public function produtos_favorito()
+    {
+        return $this->belongsToMany(Produto::class, 'favoritos')
+            ->withTimestamps();
+    }
 }

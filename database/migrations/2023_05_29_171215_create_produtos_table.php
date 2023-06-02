@@ -31,6 +31,7 @@ return new class extends Migration
                 "automotive","motorcycle",
                 "lighting"
             ]);
+            $table->integer('visualization');
             $table->timestamps();
         });
     }

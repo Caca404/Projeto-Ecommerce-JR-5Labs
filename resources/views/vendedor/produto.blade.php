@@ -4,9 +4,15 @@
 
 @section('content')
     <div class="container">
-        <h2 class="mb-4">{{ !empty($produto) ? $produto->name : 'Criar novo produto' }}</h2>
+        @if (session('status'))
+            <div class="alert alert-success mb-3" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
+        <h3 class="mb-4">{{ !empty($produto) ? $produto->name : 'Criar novo produto' }}</h3>
+        <hr class="mb-5 mt-3">
         <form action="{{ !empty($produto) ? '/produto/edit/'.$produto->id : '/produto/create' }}" method="POST" 
-            class="d-flex flex-row flex-wrap border rounded p-2
+            class="d-flex flex-row flex-wrap border rounded p-2 shadow-sm
             {{!empty($produto) ? '' : 'col-12 col-md-8 mx-auto'}}" enctype="multipart/form-data">
             @csrf
 
@@ -26,7 +32,7 @@
                                 </div>
                             @endforeach
                             <div id="hasNotImage" class="carousel-item bg-secondary text-white text-center p-2">
-                                <h5>Não tem imagem associado ao produto.</h5>
+                                <h5>Não tem imagem no banco associado ao produto.</h5>
                             </div>
                         </div>
                     </div>
@@ -34,7 +40,7 @@
                         @foreach ($produto->imagems as $image)
                             <div class="col-4 d-flex align-items-stretch">
                                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{$loop->index}}"
-                                    class="btn border" aria-current="true" aria-label="Slide {{$loop->index+1}}">
+                                    class="btn border shadow-sm" aria-current="true" aria-label="Slide {{$loop->index+1}}">
                                     <img width="70" src="{{$image->path}}" alt="img {{$loop->index+1}}">
                                 </button>
                                 <i class="fa-solid fa-circle-xmark text-danger withRemove fa-xl" style="height: 0"
@@ -101,7 +107,7 @@
 
                     <div class="mb-3 col-12">
                         <label for="description">Descrição</label>
-                        <textarea name="description" id="description" cols="30" rows="5" 
+                        <textarea name="description" id="description" cols="30" rows="5" style="max-height: 200px"
                             class="form-control @error('description') is-invalid @enderror" 
                             required>{{ (old('description') ?? $produto->description ?? '') }}</textarea>
 

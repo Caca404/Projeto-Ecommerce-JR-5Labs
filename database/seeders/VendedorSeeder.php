@@ -21,7 +21,8 @@ class VendedorSeeder extends Seeder
         $responseArray = json_decode($response, true);
 
         $vendedor = \App\Models\Vendedor::factory()->create([
-            'status' => 'A'
+            'status' => 'A',
+            'credits' => 0
         ]);
 
         foreach ($responseArray['products'] as $produto) {
@@ -31,6 +32,7 @@ class VendedorSeeder extends Seeder
             $produtoNew['price'] = $produto['price'];
             $produtoNew['category'] = $produto['category'];
             $produtoNew['description'] = $produto['description'];
+            $produtoNew['visualization'] = 0;
 
             $vendedor->produtos()->save($produtoNew);
 
