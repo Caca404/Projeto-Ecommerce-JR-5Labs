@@ -180,6 +180,11 @@ class CompradorController extends Controller
 
         $user->update($request->all());
 
+        if(!empty($request->email)){
+            $user->email_verified_at = null;
+            $user->save();
+        }
+
         return redirect()->route('comprador/perfil');
     }
 

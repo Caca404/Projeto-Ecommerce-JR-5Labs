@@ -4,13 +4,25 @@
 
 @section('content')
 <div class="container">
-    @if (session('status'))
-        <div class="alert alert-success mb-3" role="alert">
-            {{ session('status') }}
+    <h3>Bem vindo ao Project Ecommerce!</h3>
+    <hr class="@if(empty(Auth::user()->email_verified_at)) mb-3 @else mb-5 @endif mt-3">
+    @if (empty(Auth::user()->email_verified_at))
+        <div class="alert alert-warning mb-5 text-dark d-flex" role="alert">
+            <span>
+                @if(empty(Auth::user()->has_verified_email_before))
+                    Foi enviado ao seu email a validação dele. 
+                    <b>Se validar você ganhará R$ 10.000 em créditos. </b> 
+                @endif
+                Caso queira reenviar o link de verificação clique no seguinte link:
+            </span>
+            <form class="ms-2" id="sendEmailVerification" action="{{ route('verification.send') }}" method="post">
+                @csrf
+
+                <a class="text-dark" onclick="document.querySelector('#sendEmailVerification').submit()" 
+                    href="#">Reenviar</a>
+            </form> 
         </div>
     @endif
-    <h3>Bem vindo ao Project Ecommerce!</h3>
-    <hr class="mb-5 mt-3">
     <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosProdutos">
         <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
             aria-expanded="false" aria-controls="collapseExample">

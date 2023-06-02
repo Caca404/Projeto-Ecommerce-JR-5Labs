@@ -154,11 +154,9 @@
                                 @enderror
                             </div>
                         </div>
+                        <button type="submit" onclick="document.querySelector('#editPerfil form').submit()" 
+                            class="btn btn-primary w-100">Salvar Alterações</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" onclick="document.querySelector('#editPerfil form').submit()" 
-                        class="btn btn-primary w-100">Salvar Alterações</button>
                 </div>
             </div>
         </div>
@@ -212,11 +210,9 @@
                                 @enderror
                             </div>
                         </div>
+                        <button type="submit" onclick="document.querySelector('#editPassword form').submit()" 
+                            class="btn btn-danger w-100">Salvar Alterações</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" onclick="document.querySelector('#editPassword form').submit()" 
-                        class="btn btn-danger w-100">Salvar Alterações</button>
                 </div>
             </div>
         </div>

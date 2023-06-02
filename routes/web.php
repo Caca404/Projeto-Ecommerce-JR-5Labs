@@ -123,9 +123,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/email/verify', function () {
-        return view('auth/verify');
-    })->name('verification.notice');
+    Route::get('/email/verify', [AuthController::class, 'viewSendEmailVerify'])
+        ->name('verification.notice');
 
     Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verificateEmail'])
         ->middleware(['signed'])->name('verification.verify');

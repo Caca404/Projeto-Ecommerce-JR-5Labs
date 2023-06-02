@@ -136,9 +136,15 @@ class AuthController extends Controller
 
             event(new Registered($user));
 
-            return redirect()->route($user->type.'/dashboard')
-                ->with(['status', 'Email de verificação foi enviado ao seu email.']);
+            return redirect()->route($user->type.'/dashboard');
         }
+    }
+
+    public function viewSendEmailVerify() {
+        if(empty(Auth::user()->email_verified_at))
+            return view('auth/verify');
+
+        return redirect()->route('comprador/dashboard');
     }
 
     public function sendResetLink(Request $request)
@@ -193,10 +199,14 @@ class AuthController extends Controller
 
         $typeUser = Auth::user()->type;
 
-        if($typeUser == "comprador"){
-            $comprador = User::find(Auth::user()->id)->comprador;
+        if($typeUser == "comprador" && !Auth::user()->has_verified_email_before){
+            $user = User::find(Auth::user()->id);
+            $comprador = $user->comprador;
             $comprador->credits = 10000;
             $comprador->save();
+
+            $user->has_verified_email_before = true;
+            $user->save();
         }
     
         return redirect()->route($typeUser.'/dashboard');
@@ -206,6 +216,6 @@ class AuthController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
      
-        return back()->with('message', 'Verification link sent!');
+        return redirect()->route('verification.notice')->with('message', 'Verification link sent!');
     }
 }
