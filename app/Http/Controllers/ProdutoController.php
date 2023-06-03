@@ -40,9 +40,14 @@ class ProdutoController extends Controller
         $isFavorited = $produto->compradors_favorito()
             ->where('comprador_id', Auth::user()->comprador->id)->count();
 
+        $isInShoppingCart = $produto->carrinhos()
+            ->where('comprador_id', Auth::user()->comprador->id)->count();
+        
+
         return view('comprador/produto', [
             'produto' => $produto,
-            'isFavorited' => $isFavorited > 0
+            'isFavorited' => $isFavorited > 0,
+            'isInShoppingCart' => $isInShoppingCart > 0
         ]);
     }
 

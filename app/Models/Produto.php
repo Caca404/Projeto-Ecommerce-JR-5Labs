@@ -29,14 +29,20 @@ class Produto extends Model
             ->withPivot('cost')->withTimestamps();
     }
 
+    public function imagems()
+    {
+        return $this->hasMany(Imagem::class);
+    }
+
     public function compradors_favorito()
     {
         return $this->belongsToMany(Comprador::class, 'favoritos')
             ->withTimestamps();
     }
 
-    public function imagems()
+    public function carrinhos()
     {
-        return $this->hasMany(Imagem::class);
+        return $this->belongsToMany(Comprador::class, 'carrinhos')
+            ->withTimestamps();
     }
 }

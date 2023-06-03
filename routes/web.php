@@ -97,10 +97,26 @@ Route::middleware('auth')->group(function () {
         Route::patch('/comprador/perfil', [CompradorController::class, 'update']);
         Route::post('/updatePassword', [CompradorController::class, 'updatePassword']);
 
-        Route::get('/favoritar/{id}/{decision}', [CompradorController::class, 'favoritar']);
+        Route::get('/favoritar/{id}', [CompradorController::class, 'favoritar']);
+        Route::get('/desfavoritar/{id}', [CompradorController::class, 'desfavoritar']);
 
         Route::get('/comprador/meus-favoritos', [CompradorController::class, 'myFavorites'])
             ->name('comprador/meus-favoritos');
+
+        Route::get('/comprador/meu-carrinho', [CompradorController::class, 'myShoppingCart'])
+            ->name('comprador/meu-carrinho');
+
+        Route::get('/comprador/add-carrinho/{id}', [CompradorController::class, 'addToShoppingCart'])
+            ->name('comprador/add-carrinho');
+
+        Route::get('/comprador/remove-carrinho/{id}', [CompradorController::class, 'removeFromShoppingCart'])
+            ->name('comprador/remove-carrinho');
+
+        Route::get('/comprador/buy-carrinho', [CompradorController::class, 'buyFromShoppingCart'])
+            ->name('comprador/buy-carrinho');
+
+        Route::get('/comprador/clean-carrinho', [CompradorController::class, 'clearShoppingCart'])
+            ->name('comprador/clean-carrinho');
     });
 
 

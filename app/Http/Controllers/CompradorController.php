@@ -41,7 +41,7 @@ class CompradorController extends Controller
                 return back()->withErrors($validator);
             }
         }
-        
+
 
         $whereArray = [];
 
@@ -96,6 +96,9 @@ class CompradorController extends Controller
         $vendedor = $produto->vendedor;
 
         $comprador->produtos()->attach($produto, ['cost' => $produto->price]);
+
+        if($comprador->carrinhos()->where('produto_id', $produto->id)->count() > 0)
+            $comprador->carrinhos()->detach($produto->id);
 
         $comprador->credits -= $produto->price;
         $vendedor->credits += $produto->price;
@@ -205,6 +208,7 @@ class CompradorController extends Controller
 
         return view('comprador/minhasCompras', [
             "compras" => $compras,
+            "comprador" => Auth::user()->comprador,
             "categorias" => Utils::categorias,
             "isRequestEmpty" => empty($whereProduto) && empty($whereProdutoPivot) 
                 && empty($request->category)
@@ -253,19 +257,22 @@ class CompradorController extends Controller
 
     public function favoritar(Request $request)
     {
-        if($request->decision == "S"){
-            $produto = Produto::find($request->id);
-            Auth::user()->comprador->produtos_favorito()->save($produto);
-        }
-        else{
-            $comprador = Auth::user()->comprador;
-
-            $comprador->produtos_favorito()->detach($request->id);
-        }
+        $produto = Produto::find($request->id);
+        Auth::user()->comprador->produtos_favorito()->save($produto);
         
         return back()->with([
-            'status' => $request->decision == "S" ? 'Produto está na sua lista de favoritos.' :
-                "Produto foi removido da sua lista de favoritos com sucesso."
+            'status' => 'Produto está na sua lista de favoritos.'
+        ]);
+    }
+
+    public function desfavoritar(Request $request)
+    {
+        $comprador = Auth::user()->comprador;
+
+        $comprador->produtos_favorito()->detach($request->id);
+        
+        return back()->with([
+            'status' => "Produto foi removido da sua lista de favoritos com sucesso."
         ]);
     }
 
@@ -275,6 +282,79 @@ class CompradorController extends Controller
 
         return view('comprador/meusFavoritos', [
             "produtos" => $produtos,
+            'comprador' => Auth::user()->comprador
         ]);
+    }
+
+    public function myShoppingCart(Request $request)
+    {
+        $carrinho = Auth::user()->comprador->carrinhos()->get();
+
+        return view('comprador/carrinho', [
+            'carrinho' => $carrinho,
+            'comprador' => Auth::user()->comprador
+        ]);
+    }
+
+    public function addToShoppingCart(Request $request)
+    {
+        $produto = Produto::find($request->id);
+
+        $comprador = Auth::user()->comprador;
+        $comprador->carrinhos()->save($produto);
+        
+        return back()->with('status', 'Produto adicionado com sucesso.');
+    }
+
+    public function removeFromShoppingCart(Request $request)
+    {
+        $comprador = Auth::user()->comprador;
+        $comprador->carrinhos()->detach($request->id);
+        
+        return back()->with('status', 'Produto removido com sucesso.');
+    }
+
+    public function buyFromShoppingCart(Request $request)
+    {
+        $comprador = Auth::user()->comprador;
+        $carrinho = $comprador->carrinhos()->get();
+
+        $total = 0;
+        foreach ($carrinho as $produto) {
+            $total += $produto->price;
+        }
+
+        if($comprador->credits < $total)
+            return back()->withErrors([
+                'credits' => "Infelizmente a compra não foi feita.
+                    Você não tem créditos o suficiente!"
+            ]);
+
+        foreach ($carrinho as $produto) {
+            $vendedor = $produto->vendedor;
+    
+            $comprador->produtos()->attach($produto, ['cost' => $produto->price]);
+            $comprador->carrinhos()->detach($produto->id);
+    
+            $comprador->credits -= $produto->price;
+            $vendedor->credits += $produto->price;
+    
+            $comprador->save();
+            $vendedor->save();
+        }
+
+        return redirect()->route('comprador/minhas-compras');
+    }
+
+    public function clearShoppingCart(Request $request)
+    {
+        $comprador = Auth::user()->comprador;
+        $carrinho = $comprador->carrinhos()->get();
+
+        foreach ($carrinho as $produto) {
+            $comprador->carrinhos()->detach($produto->id);
+        }
+
+        return back()->with('status', 'Carrinho de compras limpado com sucesso.');
     }
 }

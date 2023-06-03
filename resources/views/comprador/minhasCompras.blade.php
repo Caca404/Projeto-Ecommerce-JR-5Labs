@@ -94,39 +94,70 @@
             @if(count($compras))
                 @foreach ($compras as $produto)
                     <div class="col-12 col-md-8 mx-auto">
-                        <a href="/produto/{{$produto->id}}" class="text-dark text-decoration-none">
-                            <div class="card shadow-sm">
-                                <div class="card-header bg-white text-end">
-                                    <span class="fst-italic text-secondary">
-                                        Data do Pedido:
-                                        <i class="fa-solid fa-clock"></i>
-                                        {{date('d/m/Y H:i', strtotime($produto->pivot->created_at))}}
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white text-end">
+                                <span class="fst-italic text-secondary">
+                                    Data do Pedido:
+                                    <i class="fa-solid fa-clock"></i>
+                                    {{date('d/m/Y H:i', strtotime($produto->pivot->created_at))}}
+                                </span>
+                            </div>
+                            <div class="card-body row">
+                                <img class="col-12 col-md-2" 
+                                    src="{{$produto->imagems->last()->path}}" 
+                                    alt="" />
+
+                                <div class="col-12 col-md-6 mt-2 mt-md-0">
+                                    <div>
+                                        <h4 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                                            {{ucfirst($produto->name)}}
+                                        </h4>
+                                    </div>
+                                    <h5 class="fw-normal">R$ {{number_format($produto->pivot->cost, 2, ',', '.')}}</h5>
+                                    <span class="fst-italic">
+                                        Vendido por:
+                                        <i class="fa-solid fa-store text-secondary"></i>
+                                        {{$produto->vendedor->user->name}}
                                     </span>
                                 </div>
-                                <div class="card-body row">
-                                    <img class="col-12 col-md-2" 
-                                        src="{{$produto->imagems->last()->path}}" 
-                                        alt="">
+                                <div class="col-12 col-md-4 mt-3 mt-md-0">
+                                    <a href="/produto/{{$produto->id}}" 
+                                        class="btn btn-outline-dark w-100 p-2">
+                                        Ver Produto
+                                    </a>
+                                    @if($comprador->carrinhos()->where('produto_id', $produto->id)->count() > 0)
+                                        <a href="/comprador/remove-carrinho/{{ $produto->id }}" 
+                                            class="btn btn-dark w-100 mt-3 p-2">
+                                            
+                                            <i class="fa-solid fa-trash"></i>
+                                            Remover do carrinho
+                                        </a>
+                                    @else
+                                        <a href="/comprador/add-carrinho/{{ $produto->id }}" 
+                                            class="btn btn-danger w-100 mt-3 p-2">
+                                            Adicionar ao carrinho
+                                        </a>
+                                    @endif
+                                    
+                                    
+                                    @if($produto->compradors_favorito()->where('comprador_id', $comprador->id)->count() > 0)
+                                        <a href="/desfavoritar/{{ $produto->id }}" 
+                                            class="btn btn-secondary w-100 mt-3 p-2">
 
-                                    <div class="col-12 col-md-6 mt-2 mt-md-0">
-                                        <div>
-                                            <h4 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                                                {{ucfirst($produto->name)}}
-                                            </h4>
-                                        </div>
-                                        <h5 class="fw-normal">R$ {{number_format($produto->pivot->cost, 2, ',', '.')}}</h5>
-                                        <span class="fst-italic">
-                                            Vendido por:
-                                            <i class="fa-solid fa-store text-secondary"></i>
-                                            {{$produto->vendedor->user->name}}
-                                        </span>
-                                    </div>
-                                    <div class="col-12 col-md-4 mt-3 mt-md-0 row align-items-center">
-                                        <button class="btn btn-outline-dark w-100 p-3">Ver produto</button>
-                                    </div>
+                                            <i class="fa-solid fa-trash"></i>
+                                            Desfavoritar
+                                        </a>
+                                    @else
+                                        <a href="/favoritar/{{ $produto->id }}" 
+                                            class="btn btn-orange w-100 mt-3 p-2">
+
+                                            <i class="fa-solid fa-star"></i>
+                                            Favoritar
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     </div>
                 @endforeach
             @elseif(!$isRequestEmpty)

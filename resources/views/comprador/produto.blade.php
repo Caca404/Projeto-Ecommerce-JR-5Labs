@@ -4,6 +4,11 @@
 
 @section('content')
     <div class="container">
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
         @error('credits')
             <div class="alert alert-danger" role="alert">
                 <b>{{ $message }}</b>
@@ -68,22 +73,35 @@
                                 Comprar agora
                             </button>
                         </form>
+                        @if($isInShoppingCart)
+                            <a href="/comprador/remove-carrinho/{{ $produto->id }}" 
+                                class="btn btn-dark w-100 mt-3 p-2">
+                                
+                                <i class="fa-solid fa-trash"></i>
+                                Remover do carrinho
+                            </a>
+                        @else
+                            <a href="/comprador/add-carrinho/{{ $produto->id }}" 
+                                class="btn btn-danger w-100 mt-3 p-2">
+                                Adicionar ao carrinho
+                            </a>
+                        @endif
+                        
                         
                         @if($isFavorited)
-                            <form class="mt-3" action="/favoritar/{{ $produto->id }}/N" method="GET">
-                                @csrf
-                                <button class="btn btn-orange w-100 p-2">
-                                    Desfavoritar
-                                </button>
-                            </form>
+                            <a href="/desfavoritar/{{ $produto->id }}" 
+                                class="btn btn-secondary w-100 mt-3 p-2">
+
+                                <i class="fa-solid fa-trash"></i>
+                                Desfavoritar
+                            </a>
                         @else
-                            <form class="mt-3" action="/favoritar/{{ $produto->id }}/S" method="GET">
-                                @csrf
-                                <button class="btn btn-orange w-100 p-2">
-                                    <i class="fa-solid fa-star"></i>
-                                    Favoritar
-                                </button>
-                            </form>
+                            <a href="/favoritar/{{ $produto->id }}" 
+                                class="btn btn-orange w-100 mt-3 p-2">
+
+                                <i class="fa-solid fa-star"></i>
+                                Favoritar
+                            </a>
                         @endif
                     </div>
                 </div>

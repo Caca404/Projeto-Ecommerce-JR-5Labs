@@ -20,7 +20,7 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
+
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -62,9 +62,11 @@
 
                             @elseif(Auth::user()->type == 'comprador')
                                 <li class="nav-item text-secondary">
-                                    <a href="#" class="nav-link d-flex">
+                                    <a href="#" class="nav-link d-flex align-items-center">
                                         <i class="fa-solid fa-user me-2"></i>
-                                        <h6 class="mb-0">R$ {{ number_format(Auth::user()->comprador->credits, 2, ',', '.')}}</h6>
+                                        <span class="mb-0 fw-bold">
+                                            R$ {{ number_format(Auth::user()->comprador->credits, 2, ',', '.')}}
+                                        </span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -81,6 +83,14 @@
                                         href="/comprador/meus-favoritos">
 
                                         Meus favoritos
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link
+                                        {{ Route::currentRouteName() == 'comprador/meu-carrinho' ? 'active' : ''}}" 
+                                        href="/comprador/meu-carrinho">
+
+                                        Meu carrinho
                                     </a>
                                 </li>
                                 <li class="nav-item">

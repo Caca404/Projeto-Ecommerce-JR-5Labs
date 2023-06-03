@@ -13,7 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('carrinhos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('produto_id')->constrained('produtos');
+            $table->foreignId('comprador_id')->constrained('compradors');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('carrinhos');
     }
 };

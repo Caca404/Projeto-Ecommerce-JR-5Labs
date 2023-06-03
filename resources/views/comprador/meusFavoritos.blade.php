@@ -28,10 +28,33 @@
                                         {{$produto->vendedor->user->name}}
                                     </span>
                                 </div>
-                                <div class="col-12 col-md-4 mt-3 mt-md-0 row align-items-center">
-                                    <a href="/produto/{{$produto->id}}" class="btn btn-outline-dark w-100 p-3">
+                                <div class="col-12 col-md-4 mt-3 mt-md-0">
+                                    <a href="/produto/{{$produto->id}}" 
+                                        class="btn btn-outline-dark w-100 p-2">
                                         Ver Produto
                                     </a>
+                                    
+                                    @if($comprador->carrinhos()->where('produto_id', $produto->id)->count() > 0)
+                                        <a href="/comprador/remove-carrinho/{{ $produto->id }}" 
+                                            class="btn btn-dark w-100 mt-3 p-2">
+
+                                            <i class="fa-solid fa-trash"></i>
+                                            Remover do carrinho
+                                        </a>
+                                    @else
+                                        <a href="/comprador/add-carrinho/{{ $produto->id }}" 
+                                            class="btn btn-danger w-100 mt-3 p-2">
+                                            Adicionar ao carrinho
+                                        </a>
+                                    @endif
+
+                                    <a href="/desfavoritar/{{ $produto->id }}" 
+                                        class="btn btn-secondary w-100 mt-3 p-2">
+
+                                        <i class="fa-solid fa-trash"></i>
+                                        Desfavoritar
+                                    </a>
+                                    
                                 </div>
                             </div>
                         </div>
