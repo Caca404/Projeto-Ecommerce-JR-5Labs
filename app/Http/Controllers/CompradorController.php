@@ -25,11 +25,19 @@ class CompradorController extends Controller
                 $request->category = json_decode($request->category[0]);
         }
 
+        $orderTypes = [
+            'name-asc' => "A-Z", 
+            'name-desc' => "Z-A",
+            'price-asc' => "Mais Barato", 
+            'price-desc' => "Mais Caro"
+        ]; 
+
         $request->validate([
             'name' => 'sometimes|required|string',
             'smallerPrice' => 'sometimes|required|numeric|min:0|lte:biggerPrice',
             'biggerPrice' => 'sometimes|required|numeric|min:0|gte:smallerPrice',
-            'category' => 'sometimes|required|array'
+            'category' => 'sometimes|required|array',
+            'order' => Rule::in(array_keys($orderTypes))
         ]);
 
         if(!empty($request->category)){
@@ -80,7 +88,8 @@ class CompradorController extends Controller
         return view('comprador/dashboard', [
             "produtos" => $produtos,
             'categorias' => Utils::categorias,
-            'isRequestEmpty' => empty($whereArray) && empty($request->category)
+            'isRequestEmpty' => empty($whereArray) && empty($request->category),
+            'orderTypes' => $orderTypes
         ]);
     }
 
@@ -140,11 +149,21 @@ class CompradorController extends Controller
                 $request->category = json_decode($request->category[0]);
         }
 
+        $orderTypes = [
+            'name-asc' => "A-Z", 
+            'name-desc' => "Z-A",
+            'cost-asc' => "Mais Barato", 
+            'cost-desc' => "Mais Caro",
+            'created_at-desc' => "Mais Recente",
+            'created_at-asc' => "Mais Velho"
+        ];
+
         $request->validate([
             'name' => 'sometimes|required|string',
             'smallerPrice' => 'sometimes|required|numeric|min:0|lte:biggerPrice',
             'biggerPrice' => 'sometimes|required|numeric|min:0|gte:smallerPrice',
-            'category' => 'sometimes|required|array'
+            'category' => 'sometimes|required|array',
+            'order' => Rule::in(array_keys($orderTypes))
         ]);
 
         if(!empty($request->category)){
@@ -210,13 +229,13 @@ class CompradorController extends Controller
 
 
 
-
         return view('comprador/minhasCompras', [
             "compras" => $compras,
             "comprador" => Auth::user()->comprador,
             "categorias" => Utils::categorias,
             "isRequestEmpty" => empty($whereProduto) && empty($whereProdutoPivot) 
-                && empty($request->category)
+                && empty($request->category),
+            'orderTypes' => $orderTypes
         ]);
     }
 

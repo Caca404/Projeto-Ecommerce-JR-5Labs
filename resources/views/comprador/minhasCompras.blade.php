@@ -93,48 +93,16 @@
                             <label for="order">Ordenar</label>
                             <select name="order" id="order" 
                                 class="form-control @error('order') is-invalid @enderror">
-                                <option value="name-asc" 
-                                    {{
-                                        empty(app('request')->input('order')) ? 'selected' :  
-                                            (app('request')->input('order') == 'name-asc' ? 'selected' : '')
-                                    }}>
-                                    A-Z
-                                </option>
-                                <option value="name-desc"
-                                    {{
-                                        empty(app('request')->input('order')) ? '' :  
-                                            (app('request')->input('order') == 'name-desc' ? 'selected' : '')
-                                    }}>
-                                    Z-A
-                                </option>
-                                <option value="cost-asc" 
-                                    {{
-                                        empty(app('request')->input('order')) ? '' :  
-                                            (app('request')->input('order') == 'cost-asc' ? 'selected' : '')
-                                    }}>
-                                    Mais Barato
-                                </option>
-                                <option value="cost-desc" 
-                                    {{
-                                        empty(app('request')->input('order')) ? '' :  
-                                            (app('request')->input('order') == 'cost-desc' ? 'selected' : '')
-                                    }}>
-                                    Mais Caro
-                                </option>
-                                <option value="created_at-desc" 
-                                    {{
-                                        empty(app('request')->input('order')) ? '' :  
-                                            (app('request')->input('order') == 'created_at-desc' ? 'selected' : '')
-                                    }}>
-                                    Mais Recente
-                                </option>
-                                <option value="created_at-asc" 
-                                    {{
-                                        empty(app('request')->input('order')) ? '' :  
-                                            (app('request')->input('order') == 'created_at-asc' ? 'selected' : '')
-                                    }}>
-                                    Mais Velho
-                                </option>
+                                @foreach ($orderTypes as $orderType => $orderTypeName)
+                                    <option value="{{$orderType}}" 
+                                        {{
+                                            empty(app('request')->input('order')) ? 
+                                                ($orderType == 'name' ? 'selected' : '') :  
+                                                (app('request')->input('order') == $orderType ? 'selected' : '')
+                                        }}>
+                                        {{$orderTypeName}}
+                                    </option>
+                                @endforeach
                             </select>
                             @error('order')
                                 <span class="invalid-feedback" role="alert">

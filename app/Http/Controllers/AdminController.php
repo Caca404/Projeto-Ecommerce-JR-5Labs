@@ -17,6 +17,15 @@ class AdminController extends Controller
         if(gettype($request->states) == "string")
             $request->states = json_decode($request->states);
 
+        $orderTypes = [
+            'name-asc' => "A-Z", 
+            'name-desc' => "Z-A",
+            'credits-asc' => "Menos Crédito", 
+            'credits-desc' => "Mais Crédito",
+            'birth_date-desc' => "Mais Novo",
+            'birth_date-asc' => "Mais Velho"
+        ];
+
         $request->validate([
             'name' => 'string|nullable',
             'cpf' => 'string|max:11',
@@ -25,14 +34,7 @@ class AdminController extends Controller
             'minCredit' => 'numeric|min:0|lte:maxCredit',
             'maxCredit' => 'numeric|min:0|gte:minCredit',
             'states' => Rule::in(array_keys(Utils::states)),
-            'order' => Rule::in([
-                'name-asc',
-                'name-desc',
-                'credits-asc',
-                'credits-desc',
-                'birth_date-desc',
-                'birth_date-asc',
-            ])
+            'order' => Rule::in(array_keys($orderTypes))
         ]);
 
         $whereArray = [];
@@ -84,17 +86,26 @@ class AdminController extends Controller
             "compradores" => $compradores,
             "states" => Utils::states,
             'isRequestEmpty' => empty($whereArray) && empty($whereParent) 
-                && empty($request->states)
+                && empty($request->states),
+            'orderTypes' => $orderTypes
         ]);
     }
 
     public function vendedores(Request $request)
     {
+        $orderTypes = [
+            'name-asc' => "A-Z", 
+            'name-desc' => "Z-A",
+            'credits-asc' => "Menos Crédito", 
+            'credits-desc' => "Mais Crédito",
+        ];
+
         $request->validate([
             'name' => 'string|nullable',
             'minCredit' => 'numeric|min:0|lte:maxCredit',
             'maxCredit' => 'numeric|min:0|gte:minCredit',
-            'status' => Rule::in(['A', 'P', 'R'])
+            'status' => Rule::in(['A', 'P', 'R']),
+            'order' => Rule::in(array_keys($orderTypes))
         ]);
 
         $whereArray = [];
@@ -140,7 +151,8 @@ class AdminController extends Controller
             "vendedores" => $vendedores,
             "states" => Utils::states,
             'isRequestEmpty' => empty($whereArray) && empty($whereParent) 
-                && empty($request->states)
+                && empty($request->states),
+            'orderTypes' => $orderTypes
         ]);
     }
 
@@ -149,11 +161,19 @@ class AdminController extends Controller
         if(gettype($request->categories) == "string")
             $request->categories = json_decode($request->categories);
 
+        $orderTypes = [
+            'name-asc' => "A-Z", 
+            'name-desc' => "Z-A",
+            'price-asc' => "Mais Barato", 
+            'price-desc' => "Mais Caro",
+        ];
+
         $request->validate([
             'name' => 'string|nullable',
             'minPrice' => 'numeric|min:0|lte:maxPrice',
             'maxPrice' => 'numeric|min:0|gte:minPrice',
-            'category' => Rule::in(Utils::categorias)
+            'category' => Rule::in(Utils::categorias),
+            'order' => Rule::in(array_keys($orderTypes)) 
         ]);
 
         $whereArray = [];
@@ -186,7 +206,8 @@ class AdminController extends Controller
         return view('/admin/produtos', [
             "produtos" => $produtos,
             'categorias' => Utils::categorias,
-            'isRequestEmpty' => count($whereArray) && empty($request->categories)
+            'isRequestEmpty' => count($whereArray) && empty($request->categories),
+            'orderTypes' => $orderTypes
         ]);
     }
 

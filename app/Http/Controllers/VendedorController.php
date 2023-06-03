@@ -20,11 +20,19 @@ class VendedorController extends Controller
                 $request->category = json_decode($request->category[0]);
         }
 
+        $orderTypes = [
+            'name-asc' => "A-Z", 
+            'name-desc' => "Z-A",
+            'price-asc' => "Mais Barato", 
+            'price-desc' => "Mais Caro"
+        ]; 
+
         $request->validate([
             'name' => 'sometimes|required|string',
             'smallerPrice' => 'sometimes|required|numeric|min:0|lte:biggerPrice',
             'biggerPrice' => 'sometimes|required|numeric|min:0|gte:smallerPrice',
-            'category' => 'sometimes|required|array'
+            'category' => 'sometimes|required|array',
+            'order' => Rule::in(array_keys($orderTypes))
         ]);
 
         if(!empty($request->category)){
@@ -73,7 +81,8 @@ class VendedorController extends Controller
             'produtos' => $produtos,
             'categorias' => Utils::categorias,
             "isRequestEmpty" => empty($whereProduto) && empty($whereProdutoPivot) 
-                && empty($request->category)
+                && empty($request->category),
+            'orderTypes' => $orderTypes
         ]);
     }
 
