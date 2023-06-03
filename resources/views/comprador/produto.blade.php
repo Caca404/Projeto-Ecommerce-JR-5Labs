@@ -57,6 +57,17 @@
                         <h2 class="mt-3">{{ ucfirst($produto->name) }}</h2>
                         <h5 class="mb-4">R$ {{ number_format($produto->price, 2, ',', '.') }}</h5>
 
+                        <span>Avaliação do público - {{$numeroAvaliacoes}} pessoa(s)</span>
+                        <div class="star-wrapper text-start mb-4">
+                            @for ($i = 5; $i >= 1; $i--)
+                                <i class="fas fa-star s{{$i}}
+                                    {{
+                                        $mediaAvaliacoes == $i ? 'active' : ''
+                                    }}
+                                "></i>
+                            @endfor
+                        </div>
+
                         <span class="fw-bold">Categoria:</span>
                         {{ ucfirst($produto->category) }}
 

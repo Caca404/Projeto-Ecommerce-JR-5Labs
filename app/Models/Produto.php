@@ -45,4 +45,11 @@ class Produto extends Model
         return $this->belongsToMany(Comprador::class, 'carrinhos')
             ->withTimestamps();
     }
+
+    public function avaliacoes()
+    {
+        return $this->belongsToMany(Comprador::class, 'avaliacao')
+            ->withPivot('rating')
+            ->withTimestamps();
+    }
 }

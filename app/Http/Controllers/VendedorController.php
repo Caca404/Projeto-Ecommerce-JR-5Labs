@@ -65,6 +65,8 @@ class VendedorController extends Controller
                 ->get();
         }
 
+        
+
 
         return view('vendedor/dashboard', [
             'produtos' => $produtos,

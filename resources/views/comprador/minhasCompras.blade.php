@@ -5,7 +5,13 @@
 @section('content')
     <div class="container">
         <h3>Minhas Compras</h3>
-        <hr class="mb-5 mt-3">
+        <hr class="{{session('status') ? 'mb-3' : 'mb-5' }}  mt-3">
+
+        @if (session('status'))
+            <div class="alert alert-success mb-5" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
         <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosProdutos">
             <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
                 aria-expanded="false" aria-controls="collapseExample">
@@ -119,6 +125,22 @@
                                         <i class="fa-solid fa-store text-secondary"></i>
                                         {{$produto->vendedor->user->name}}
                                     </span>
+                                    <div class="star-wrapper text-start mt-3">
+                                        @php 
+                                            $avaliacao = $comprador->avaliacoes()
+                                                ->where('produto_id', $produto->id)
+                                                ->first() 
+                                        @endphp
+
+                                        @for ($i = 5; $i >= 1; $i--)
+                                            <a href="/rate/{{$produto->id}}/{{$i}}" 
+                                                class="fas fa-star s{{$i}}
+                                                {{
+                                                    !empty($avaliacao) ? ($avaliacao->pivot->rating == $i ? 'active' : '') : ''
+                                                }}
+                                            "></a>
+                                        @endfor
+                                    </div>
                                 </div>
                                 <div class="col-12 col-md-4 mt-3 mt-md-0">
                                     <a href="/produto/{{$produto->id}}" 

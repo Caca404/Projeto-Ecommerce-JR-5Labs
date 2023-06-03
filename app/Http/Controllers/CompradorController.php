@@ -42,7 +42,6 @@ class CompradorController extends Controller
             }
         }
 
-
         $whereArray = [];
 
         if(!empty($request->smallerPrice))
@@ -356,5 +355,23 @@ class CompradorController extends Controller
         }
 
         return back()->with('status', 'Carrinho de compras limpado com sucesso.');
+    }
+
+    public function rateProduct(Request $request)
+    {
+        $produto = Produto::find($request->id);
+        $comprador = Auth::user()->comprador;
+        $hasAvaliacao = $comprador->avaliacoes()
+            ->where('produto_id', $request->id)->count() > 0;
+
+        if($hasAvaliacao){
+            $comprador->avaliacoes()->updateExistingPivot($produto->id, [
+                'rating' => $request->rating
+            ]);
+        }
+        else 
+            $comprador->avaliacoes()->attach($produto, ['rating' => $request->rating]);
+
+        return back()->with('status', 'Avaliação feita com sucesso.');
     }
 }

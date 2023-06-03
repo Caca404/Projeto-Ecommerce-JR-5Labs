@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
     @if (Auth::user()->vendedor->status == "A" && !empty($produtos))
-        <div class="card mb-5 col-12 col-md-8 mx-auto" id="filtrosProdutos">
+        <div class="card col-12 col-md-8 mx-auto" id="filtrosProdutos">
             <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
                 aria-expanded="false" aria-controls="collapseExample">
 
@@ -89,7 +89,7 @@
                 </form>
             </div>
         </div>
-        <a href="/produto" class="btn btn-primary my-5 col-12 col-md-3 offset-md-7">
+        <a href="/produto" class="btn btn-primary mt-3 mb-5 col-12 col-md-3 offset-md-7">
             <i class="fa-solid fa-plus"></i>
             Adicionar produtos
         </a>
@@ -112,7 +112,7 @@
                     </div>
                 </div>
             </div>
-        @elseif (!empty($produtos))    
+        @elseif (count($produtos))    
             @foreach ($produtos as $produto)
                 <div class="col-12 col-md-3 mb-3 mb-md-0 d-flex align-items-stretch">
                     <a href="/produto/edit/{{$produto->id}}" class="text-dark text-decoration-none w-100">
@@ -126,6 +126,37 @@
                             <div class="card-body text-center">
                                 <h5>{{ucfirst($produto->name)}}</h5>
                                 <span>R$ {{ number_format($produto->price, 2, ',', '.')}}</span>
+
+                                @php
+                                    $mediaAvaliacoes = 0;
+                                    $numeroAvaliacoes = 0;
+                                    
+                                    $avaliacoes = $produto->avaliacoes()
+                                        ->where('produto_id', $produto->id)
+                                        ->get();
+
+                                    foreach ($avaliacoes as $avaliacao) {
+                                        $mediaAvaliacoes += $avaliacao->pivot->rating;
+                                        $numeroAvaliacoes++;
+                                    }
+
+                                    if($numeroAvaliacoes > 0)
+                                        $mediaAvaliacoes = round($mediaAvaliacoes/$numeroAvaliacoes);
+                                @endphp
+                                
+                                <div class="mt-3">
+                                    <span>{{$numeroAvaliacoes}} avaliações</span>
+                                </div>
+                                <div class="star-wrapper mb-3">
+                                    @for ($i = 5; $i >= 1; $i--)
+                                        <i class="fas fa-star s{{$i}}
+                                            {{
+                                                $mediaAvaliacoes == $i ? 'active' : ''
+                                            }}
+                                        "></i>
+                                    @endfor
+                                </div>
+
                                 <div>
                                     <i class="fa-solid fa-eye"></i>
                                     {{$produto->visualization ? $produto->visualization : 0}}

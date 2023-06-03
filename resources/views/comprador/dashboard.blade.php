@@ -113,7 +113,7 @@
             @foreach ($produtos as $produto)
                 <div class="col-12 col-md-3 mb-3 mb-md-0 d-flex align-items-stretch">
                     <a href="/produto/{{$produto->id}}" class="text-dark text-decoration-none w-100">
-                        <div class="card h-100 shadow-sm">
+                        <div class="card h-100 shadow-sm" title="{{ucfirst($produto->name)}}">
                             @if($produto->imagems->count())
                                 <div class="flex-fill d-flex">
                                     <img src="{{$produto->imagems->last()->path}}" 
@@ -121,8 +121,37 @@
                                 </div>
                             @endif
                             <div class="card-body text-center">
-                                <h5>{{ucfirst($produto->name)}}</h5>
+                                <h5 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                                    {{ucfirst($produto->name)}}
+                                </h5>
                                 <span>R$ {{ number_format($produto->price, 2, ',', '.')}}</span>
+
+                                @php
+                                    $mediaAvaliacoes = 0;
+                                    $numeroAvaliacoes = 0;
+                                    
+                                    $avaliacoes = $produto->avaliacoes()
+                                        ->where('produto_id', $produto->id)
+                                        ->get();
+
+                                    foreach ($avaliacoes as $avaliacao) {
+                                        $mediaAvaliacoes += $avaliacao->pivot->rating;
+                                        $numeroAvaliacoes++;
+                                    }
+
+                                    if($numeroAvaliacoes > 0)
+                                        $mediaAvaliacoes = round($mediaAvaliacoes/$numeroAvaliacoes);
+                                @endphp
+                                
+                                <div class="star-wrapper mt-3">
+                                    @for ($i = 5; $i >= 1; $i--)
+                                        <i class="fas fa-star s{{$i}}
+                                            {{
+                                                $mediaAvaliacoes == $i ? 'active' : ''
+                                            }}
+                                        "></i>
+                                    @endfor
+                                </div>
                             </div>
                         </div>
                     </a>

@@ -117,6 +117,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/comprador/clean-carrinho', [CompradorController::class, 'clearShoppingCart'])
             ->name('comprador/clean-carrinho');
+
+        Route::get('/rate/{id}/{rating}', [CompradorController::class, 'rateProduct']);
+            
     });
 
 

@@ -43,11 +43,27 @@ class ProdutoController extends Controller
         $isInShoppingCart = $produto->carrinhos()
             ->where('comprador_id', Auth::user()->comprador->id)->count();
         
+        $numeroAvaliacoes = 0;
+        $mediaAvaliacoes = 0;
+
+        $avaliacoes = $produto->avaliacoes()
+            ->where('produto_id', $produto->id)
+            ->get();
+
+        foreach ($avaliacoes as $avaliacao) {
+            $mediaAvaliacoes += $avaliacao->pivot->rating;
+            $numeroAvaliacoes++;
+        }
+
+        if($numeroAvaliacoes > 0)
+            $mediaAvaliacoes = round($mediaAvaliacoes/$numeroAvaliacoes);
 
         return view('comprador/produto', [
             'produto' => $produto,
             'isFavorited' => $isFavorited > 0,
-            'isInShoppingCart' => $isInShoppingCart > 0
+            'isInShoppingCart' => $isInShoppingCart > 0,
+            'mediaAvaliacoes' => $mediaAvaliacoes,
+            'numeroAvaliacoes' => $numeroAvaliacoes
         ]);
     }
 
