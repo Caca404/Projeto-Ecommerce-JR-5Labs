@@ -62,7 +62,7 @@ window.onload = function() {
             if(name) query.push("name="+name);
             if(smallerPrice) query.push("smallerPrice="+smallerPrice);
             if(biggerPrice) query.push("biggerPrice="+biggerPrice);
-            if(category.length > 0) query.push("category="+JSON.stringify(category));
+            if(category.length > 0) query.push("category[]="+JSON.stringify(category));
         
             let getRequest = realLocationHref+"?"+query.join('&');
         

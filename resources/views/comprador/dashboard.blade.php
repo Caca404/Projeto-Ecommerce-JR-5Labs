@@ -27,9 +27,10 @@
         <a class="text-decoration-none text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" 
             aria-expanded="false" aria-controls="collapseExample">
 
-            <div class="card-header bg-dark p-3">
+            <div class="card-header rounded-top bg-dark p-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Filtros</h4>
+
                     <i class="fa-solid fa-plus"></i>
                 </div>
             </div>
@@ -38,37 +39,67 @@
 
             <form class="row g-3">
                 <div class="col-12">
+
                     <label for="name">Nome do produto</label>
-                    <input type="text" class="form-control" id="name" name="name" 
-                        placeholder="Pesquisar nome do produto" 
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                        id="name" name="name" placeholder="Pesquisar nome do produto" 
                         value="{{app('request')->input('name')}}">
+                    @error('name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+
                 </div>
                 <div class="col-12 col-md-6 row g-3">
                     <div class="col-12 mb-3">
+
                         <label for="smallerPrice">Menor preço</label>
-                        <input type="number" class="form-control" min="1" id="smallerPrice"
-                            name="smallerPrice" value="{{app('request')->input('smallerPrice')}}">
-                        
+                        <input type="number" class="form-control @error('smallerPrice') is-invalid @enderror" 
+                            min="0" id="smallerPrice" name="smallerPrice" 
+                            value="{{app('request')->input('smallerPrice') ?? 0}}">
+                        @error('smallerPrice')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
                     </div>
                     <div class="col-12 mb-3">
+
                         <label for="biggerPrice">Maior preço</label>
-                        <input type="number" class="form-control" min="1" 
-                            max="1000000" id="biggerPrice" name="biggerPrice" 
-                            value="{{app('request')->input('biggerPrice')}}">
+                        <input type="number" class="form-control @error('biggerPrice') is-invalid @enderror" 
+                            min="0" max="1000000" id="biggerPrice" name="biggerPrice" 
+                            value="{{app('request')->input('biggerPrice') ?? 0}}">
+
+                        @error('biggerPrice')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
                     </div>
                 </div>
                 <div class="col-12 col-md-6 row g-3">
                     <div class="mb-3">
                         <label for="category">Categorias</label>
-                        <select name="category[]" id="category" class="selectize" multiple>
+                        <select name="category[]" id="category" multiple>
                             @foreach ($categorias as $categoria)
-                                <option value="{{$categoria}}" @if(!empty(json_decode(app('request')->input('category')))) {{
-                                    in_array($categoria, json_decode(app('request')->input('category'))) ? 'selected' : ''
-                                }} @endif>
+                                <option value="{{$categoria}}" 
+                                {{
+                                    !empty(app('request')->input('category')) ? 
+                                    (in_array($categoria, json_decode(app('request')->input('category')[0])) ? 'selected' : '') 
+                                    : ''
+                                }}>
                                     {{$categoria}}
                                 </option>
                             @endforeach
                         </select>
+                        @error('category')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                 </div>
                 <div class="col-12">

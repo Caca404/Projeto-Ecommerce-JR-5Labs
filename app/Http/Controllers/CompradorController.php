@@ -9,19 +9,39 @@ use App\Models\User;
 use App\Models\Venda;
 use App\Models\Vendedor;
 use App\Utils\Utils;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class CompradorController extends Controller
 {
     public function dashboard(Request $request)
     {
-        
-        if(gettype($request->category) == "string")
-            $request->category = json_decode($request->category);
+        if(!empty($request->category)){
+            if(gettype($request->category[0]) == "string")
+                $request->category = json_decode($request->category[0]);
+        }
 
+        $request->validate([
+            'name' => 'sometimes|required|string',
+            'smallerPrice' => 'sometimes|required|numeric|min:0|lte:biggerPrice',
+            'biggerPrice' => 'sometimes|required|numeric|min:0|gte:smallerPrice',
+            'category' => 'sometimes|required|array'
+        ]);
+
+        if(!empty($request->category)){
+            $validator = Validator::make($request->category, [
+                "category.*" => Rule::in(Utils::categorias)
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+        }
+        
 
         $whereArray = [];
 
@@ -88,10 +108,28 @@ class CompradorController extends Controller
 
     public function myOrders(Request $request)
     {
-        if(gettype($request->category) == "string")
-            $request->category = json_decode($request->category);
+        if(!empty($request->category)){
+            if(gettype($request->category[0]) == "string")
+                $request->category = json_decode($request->category[0]);
+        }
 
-            
+        $request->validate([
+            'name' => 'sometimes|required|string',
+            'smallerPrice' => 'sometimes|required|numeric|min:0|lte:biggerPrice',
+            'biggerPrice' => 'sometimes|required|numeric|min:0|gte:smallerPrice',
+            'category' => 'sometimes|required|array'
+        ]);
+
+        if(!empty($request->category)){
+            $validator = Validator::make($request->category, [
+                "category.*" => Rule::in(Utils::categorias)
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+        }
+
         $whereProduto = [];
         if(!empty($request->name))
             $whereProduto[] = ['name', 'LIKE', '%'.$request->name."%"];
@@ -103,7 +141,6 @@ class CompradorController extends Controller
 
         if(!empty($request->biggerPrice))
             $whereProdutoPivot[] = ['<=', $request->biggerPrice];
-
 
         $categories = null;
         if(!empty($request->category)){

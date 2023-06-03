@@ -8,14 +8,35 @@ use App\Utils\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class VendedorController extends Controller
 {
     public function dashboard(Request $request)
     {
-        if(gettype($request->category) == "string")
-            $request->category = json_decode($request->category);
+        if(!empty($request->category)){
+            if(gettype($request->category[0]) == "string")
+                $request->category = json_decode($request->category[0]);
+        }
+
+        $request->validate([
+            'name' => 'sometimes|required|string',
+            'smallerPrice' => 'sometimes|required|numeric|min:0|lte:biggerPrice',
+            'biggerPrice' => 'sometimes|required|numeric|min:0|gte:smallerPrice',
+            'category' => 'sometimes|required|array'
+        ]);
+
+        if(!empty($request->category)){
+            $validator = Validator::make($request->category, [
+                "category.*" => Rule::in(Utils::categorias)
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+        }
+
 
         $whereArray = [];
 
