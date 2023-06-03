@@ -8,11 +8,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use App\Utils\Utils;
+use Illuminate\Support\Facades\Validator;
 
 class ProdutoController extends Controller
 {
     public function produto(Request $request)
     {
+        $request->merge(['id' => $request->route('id')]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
         if(Auth::user()->vendedor->status == "P") 
             return redirect()->route('vendedor/dashboard');
 
@@ -30,6 +39,15 @@ class ProdutoController extends Controller
 
     public function show(Request $request)
     {
+        $request->merge(['id' => $request->route('id')]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
+
         $produto = Produto::where('id', $request->id)
             ->with('imagems')
             ->first();
@@ -112,6 +130,14 @@ class ProdutoController extends Controller
 
     public function editProduto(Request $request)
     {
+        $request->merge(['id' => $request->route('id')]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+        
         $request->imagesToRemove = json_decode($request->imagesToRemove[0]);
 
         $request->validate([

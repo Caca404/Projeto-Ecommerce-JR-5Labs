@@ -6,6 +6,11 @@
 <div class="container">
     <h3>Bem vindo ao Project Ecommerce!</h3>
     <hr class="@if(empty(Auth::user()->email_verified_at)) mb-3 @else mb-5 @endif mt-3">
+    @error('id')
+        <div class="alert alert-danger" role="alert">
+            <b>{{ $message }}</b>
+        </div>
+    @enderror
     @if (empty(Auth::user()->email_verified_at))
         <div class="alert alert-warning mb-5 text-dark d-flex" role="alert">
             <span>

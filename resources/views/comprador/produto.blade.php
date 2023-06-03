@@ -9,7 +9,7 @@
                 {{ session('status') }}
             </div>
         @endif
-        @error('credits')
+        @error('id', 'credits')
             <div class="alert alert-danger" role="alert">
                 <b>{{ $message }}</b>
             </div>

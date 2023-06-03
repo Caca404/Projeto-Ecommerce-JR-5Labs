@@ -160,13 +160,31 @@ class AdminController extends Controller
 
     public function decisionStatusVendedor(Request $request)
     {
+        $request->merge([
+            'id' => $request->route('id'),
+            'decision' => $request->route('decision'),
+        ]);
+        $request->validate([
+            'id' => 'required|exists:vendedors,id',
+            'decision' => [
+                'required',
+                Rule::in([
+                    'S', 'N'
+                ])
+            ]
+        ]);
+
         $vendedor = Vendedor::find($request->id);
-        $vendedor->status = $request->decision;
-        if($vendedor->save())
-            return back()->with([
-                'message' => 'Vendedor foi '.($request->decision == "A" ? 'Aceito' : "Rejeitado")
-                    .'com sucesso.'
-            ]);
-        return back()->withErrors(['message' => 'A decisão não foi salvo.']);
+        
+        if(!empty($vendedor)){
+            $vendedor->status = $request->decision;
+            if($vendedor->save())
+                return back()->with([
+                    'message' => 'Vendedor foi '.($request->decision == "A" ? 'Aceito' : "Rejeitado")
+                        .'com sucesso.'
+                ]);
+        }
+
+        return back()->withErrors(['message' => 'A decisão não foi salva.']);
     }
 }

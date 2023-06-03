@@ -83,6 +83,13 @@ class CompradorController extends Controller
 
     public function buy(Request $request)
     {
+        $request->merge([
+            'id' => $request->route('id')
+        ]);
+        $request->validate([
+            'id' => 'required|exists:produtos,id'
+        ]);
+
         $produto = Produto::find($request->id);
         $comprador = Auth::user()->comprador;
         
@@ -256,6 +263,14 @@ class CompradorController extends Controller
 
     public function favoritar(Request $request)
     {
+        $request->merge(['id' => $request->route('id')]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
         $produto = Produto::find($request->id);
         Auth::user()->comprador->produtos_favorito()->save($produto);
         
@@ -266,6 +281,14 @@ class CompradorController extends Controller
 
     public function desfavoritar(Request $request)
     {
+        $request->merge(['id' => $request->route('id')]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
         $comprador = Auth::user()->comprador;
 
         $comprador->produtos_favorito()->detach($request->id);
@@ -297,6 +320,14 @@ class CompradorController extends Controller
 
     public function addToShoppingCart(Request $request)
     {
+        $request->merge(['id' => $request->route('id')]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
         $produto = Produto::find($request->id);
 
         $comprador = Auth::user()->comprador;
@@ -307,6 +338,14 @@ class CompradorController extends Controller
 
     public function removeFromShoppingCart(Request $request)
     {
+        $request->merge(['id' => $request->route('id')]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id'
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
         $comprador = Auth::user()->comprador;
         $comprador->carrinhos()->detach($request->id);
         
@@ -359,6 +398,23 @@ class CompradorController extends Controller
 
     public function rateProduct(Request $request)
     {
+        $request->merge([
+            'id' => $request->route('id'),
+            'rating' => $request->route('rating'),
+        ]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:produtos,id',
+            'rating' => [
+                'required',
+                Rule::in([
+                    1,2,3,4,5
+                ])
+            ]
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+
         $produto = Produto::find($request->id);
         $comprador = Auth::user()->comprador;
         $hasAvaliacao = $comprador->avaliacoes()
