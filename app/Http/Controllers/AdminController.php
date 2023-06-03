@@ -19,12 +19,20 @@ class AdminController extends Controller
 
         $request->validate([
             'name' => 'string|nullable',
-            'cpf' => 'numeric|max:11',
+            'cpf' => 'string|max:11',
             'minDate' => 'date|lte:maxDate',
             'maxDate' => 'date|gte:minDate',
             'minCredit' => 'numeric|min:0|lte:maxCredit',
             'maxCredit' => 'numeric|min:0|gte:minCredit',
-            'states' => Rule::in(array_keys(Utils::states))
+            'states' => Rule::in(array_keys(Utils::states)),
+            'order' => Rule::in([
+                'name-asc',
+                'name-desc',
+                'credits-asc',
+                'credits-desc',
+                'birth_date-desc',
+                'birth_date-asc',
+            ])
         ]);
 
         $whereArray = [];
@@ -43,31 +51,34 @@ class AdminController extends Controller
         }
         else $states = array_keys(Utils::states);
 
+        $order = ['name', 'asc'];
+        if(!empty($request->order)) $order = explode('-', $request->order);
 
-        if(count($whereArray) && !empty($whereParent)){
+        
+
+        $compradores = Comprador::whereIn('state', $states);
+
+        if(count($whereArray))
+            $compradores = $compradores->where($whereArray);
+        
+        if(!empty($whereParent)){
+
             $users = User::where($whereParent)->get();
 
-            $compradores = Comprador::where($whereArray)
-                ->whereIn('state', $states)
-                ->whereBelongsTo($users)
-                ->get();
+            $compradores = $compradores->whereBelongsTo($users);
         }
-        elseif(!empty($whereParent)){
-            $users = User::where($whereParent)->get();
 
-            $compradores = Comprador::whereIn('state', $states)
-                ->whereBelongsTo($users)
-                ->get();
-        }
-        elseif(count($whereArray)){
-            $compradores = Comprador::where($whereArray)
-                ->whereIn('state', $states)
-                ->get();
-        }
-        else{
-            $compradores = Comprador::whereIn('state', $states)
-                ->get();
-        }
+        $compradores = $compradores->get();
+
+        $orderName = $order[0];
+        $orderSort = 'sortBy'.($order[1] == 'asc' ? '' : 'Desc');
+
+        $compradores = $compradores->$orderSort(function($comprador, $key) use ($orderName) {
+            if($orderName == 'name') return strtolower($comprador->user->$orderName);
+            else return $comprador->$orderName;
+        })->values();
+
+
 
         return view('/admin/compradores', [
             "compradores" => $compradores,
@@ -93,23 +104,37 @@ class AdminController extends Controller
         if(!empty($request->maxCredit)) $whereArray[] = ['credits', '<=', $request->maxCredit];
         if(!empty($request->status)) $whereArray[] = ['status', $request->status];
 
-        if(count($whereArray) && !empty($whereParent)){
+        $order = ['name', 'asc'];
+        if(!empty($request->order)) $order = explode('-', $request->order);
+
+
+
+
+        $vendedores = null;
+
+        if(count($whereParent)){
             $users = User::where($whereParent)->get();
 
-            $vendedores = Vendedor::where($whereArray)
-                ->whereBelongsTo($users)->get();
+            $vendedores = Vendedor::whereBelongsTo($users);
         }
-        elseif(!empty($whereParent)){
-            $users = User::where($whereParent)->get();
 
-            $vendedores = Vendedor::whereBelongsTo($users)->get();
+        if(count($whereArray)){
+            if($vendedores == null) $vendedores = Vendedor::where($whereArray);
+            else $vendedores = $vendedores->where($whereArray);
         }
-        elseif(count($whereArray)){
-            $vendedores = Vendedor::where($whereArray)->get();
-        }
-        else{
-            $vendedores = Vendedor::all();
-        }
+
+        if($vendedores != null) $vendedores = $vendedores->get();
+        else $vendedores = Vendedor::all();
+
+        $orderName = $order[0];
+        $orderSort = 'sortBy'.($order[1] == 'asc' ? '' : 'Desc');
+
+        $vendedores = $vendedores->$orderSort(function($vendedor, $key) use ($orderName) {
+            if($orderName == "name") return strtolower($vendedor->user->name);
+            return $vendedor->$orderName;
+        })->values();
+
+
 
         return view('/admin/vendedores', [
             "vendedores" => $vendedores,
@@ -143,18 +168,25 @@ class AdminController extends Controller
         }
         else $categories = Utils::categorias;
 
+        $order = ['name', 'asc'];
+        if(!empty($request->order)) $order = explode('-', $request->order);
 
-        if(count($whereArray)){
-            $produtos = Produto::where($whereArray)
-                ->whereIn('category', $categories)
-                ->get();
-        }
-        else $produtos = Produto::whereIn('category', $categories)->get();
+
+
+        $produtos = Produto::whereIn('category', $categories);
+
+        if(count($whereArray))
+            $produtos = $produtos->where($whereArray);
+        
+        $produtos = $produtos->orderBy($order[0], $order[1])
+            ->get();
+
+
 
         return view('/admin/produtos', [
             "produtos" => $produtos,
             'categorias' => Utils::categorias,
-            'isRequestEmpty' => empty($whereArray) && empty($request->categories)
+            'isRequestEmpty' => count($whereArray) && empty($request->categories)
         ]);
     }
 

@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-6 row g-3">
-                    <div class="mb-3">
+                    <div class="col-12">
                         <label for="category">Categorias</label>
                         <select name="category[]" id="category" multiple>
                             @foreach ($categorias as $categoria)
@@ -106,6 +106,45 @@
                             </span>
                         @enderror
                     </div>
+                    <div class="col-12">
+                        <label for="order">Ordenar</label>
+                        <select name="order" id="order" 
+                            class="form-control @error('order') is-invalid @enderror">
+                            <option value="name-asc" 
+                                {{
+                                    empty(app('request')->input('order')) ? 'selected' :  
+                                        (app('request')->input('order') == 'name-asc' ? 'selected' : '')
+                                }}>
+                                A-Z
+                            </option>
+                            <option value="name-desc"
+                                {{
+                                    empty(app('request')->input('order')) ? '' :  
+                                        (app('request')->input('order') == 'name-desc' ? 'selected' : '')
+                                }}>
+                                Z-A
+                            </option>
+                            <option value="price-asc" 
+                                {{
+                                    empty(app('request')->input('order')) ? '' :  
+                                        (app('request')->input('order') == 'price-asc' ? 'selected' : '')
+                                }}>
+                                Mais Barato
+                            </option>
+                            <option value="price-desc" 
+                                {{
+                                    empty(app('request')->input('order')) ? '' :  
+                                        (app('request')->input('order') == 'price-desc' ? 'selected' : '')
+                                }}>
+                                Mais Caro
+                            </option>
+                        </select>
+                        @error('order')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
                 </div>
                 <div class="col-12">
                     <button class="btn btn-secondary w-100">Filtrar</button>
@@ -114,7 +153,7 @@
         </div>
     </div>
     <div class="row align-cards g-3">
-        @if (!empty($produtos))
+        @if (count($produtos))
             @foreach ($produtos as $produto)
                 <div class="col-12 col-md-3 mb-3 mb-md-0 d-flex align-items-stretch">
                     <a href="/produto/{{$produto->id}}" class="text-dark text-decoration-none w-100">

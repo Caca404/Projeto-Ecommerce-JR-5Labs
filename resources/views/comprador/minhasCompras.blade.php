@@ -69,21 +69,74 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 row g-3">
-                        <div class="mb-3">
+                        <div class="col-12">
                             <label for="category">Categorias</label>
                             <select name="category[]" id="category" multiple>
                                 @foreach ($categorias as $categoria)
                                     <option value="{{$categoria}}" 
-                                        {{
-                                            !empty(app('request')->input('category')) ? 
-                                            (in_array($categoria, json_decode(app('request')->input('category')[0])) ? 'selected' : '') 
-                                            : ''
-                                        }}>
+                                    {{
+                                        !empty(app('request')->input('category')) ? 
+                                        (in_array($categoria, json_decode(app('request')->input('category')[0])) ? 'selected' : '') 
+                                        : ''
+                                    }}>
                                         {{$categoria}}
                                     </option>
                                 @endforeach
                             </select>
                             @error('category')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="col-12">
+                            <label for="order">Ordenar</label>
+                            <select name="order" id="order" 
+                                class="form-control @error('order') is-invalid @enderror">
+                                <option value="name-asc" 
+                                    {{
+                                        empty(app('request')->input('order')) ? 'selected' :  
+                                            (app('request')->input('order') == 'name-asc' ? 'selected' : '')
+                                    }}>
+                                    A-Z
+                                </option>
+                                <option value="name-desc"
+                                    {{
+                                        empty(app('request')->input('order')) ? '' :  
+                                            (app('request')->input('order') == 'name-desc' ? 'selected' : '')
+                                    }}>
+                                    Z-A
+                                </option>
+                                <option value="cost-asc" 
+                                    {{
+                                        empty(app('request')->input('order')) ? '' :  
+                                            (app('request')->input('order') == 'cost-asc' ? 'selected' : '')
+                                    }}>
+                                    Mais Barato
+                                </option>
+                                <option value="cost-desc" 
+                                    {{
+                                        empty(app('request')->input('order')) ? '' :  
+                                            (app('request')->input('order') == 'cost-desc' ? 'selected' : '')
+                                    }}>
+                                    Mais Caro
+                                </option>
+                                <option value="created_at-desc" 
+                                    {{
+                                        empty(app('request')->input('order')) ? '' :  
+                                            (app('request')->input('order') == 'created_at-desc' ? 'selected' : '')
+                                    }}>
+                                    Mais Recente
+                                </option>
+                                <option value="created_at-asc" 
+                                    {{
+                                        empty(app('request')->input('order')) ? '' :  
+                                            (app('request')->input('order') == 'created_at-asc' ? 'selected' : '')
+                                    }}>
+                                    Mais Velho
+                                </option>
+                            </select>
+                            @error('order')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

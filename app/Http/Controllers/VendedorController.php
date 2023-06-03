@@ -49,23 +49,24 @@ class VendedorController extends Controller
         if(!empty($request->name))
             $whereArray[] = ['name', 'LIKE', '%'.$request->name."%"];
 
-        if(!empty($whereArray)){
-            $produtos = Auth::user()->vendedor->produtos()
-                ->where($whereArray)
-                ->whereIn('category', !empty($request->category) ?
-                    (is_array($request->category) ? [...$request->category] : [$request->category]) : 
-                    [...Utils::categorias])
-                ->get();
+        $categories = null;
+        if(!empty($request->category)){
+            if(is_array($request->category)) $categories = [...$request->category];
+            else $categories = [$request->category];
         }
-        else{
-            $produtos = Auth::user()->vendedor->produtos()
-                ->whereIn('category', !empty($request->category) ?
-                    (is_array($request->category) ? [...$request->category] : [$request->category]) : 
-                    [...Utils::categorias])
-                ->get();
-        }
+        else $categories = Utils::categorias;
 
+        $order = ['name', 'asc'];
+        if(!empty($request->order)) $order = explode('-', $request->order);
+
+        $produtos = Auth::user()->vendedor->produtos()
+                ->whereIn('category', $categories);
+
+        if(!empty($whereArray))
+            $produtos = $produtos->where($whereArray);
         
+        $produtos = $produtos->orderBy($order[0], $order[1])->get();
+
 
 
         return view('vendedor/dashboard', [

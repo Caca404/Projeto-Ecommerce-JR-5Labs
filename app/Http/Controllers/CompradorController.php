@@ -42,6 +42,8 @@ class CompradorController extends Controller
             }
         }
 
+
+
         $whereArray = [];
 
         if(!empty($request->smallerPrice))
@@ -53,11 +55,27 @@ class CompradorController extends Controller
         if(!empty($request->name))
             $whereArray[] = ['name', 'LIKE', '%'.$request->name."%"];
 
-        $produtos = Produto::where($whereArray)
-        ->whereIn('category', !empty($request->category) ?
-            (is_array($request->category) ? [...$request->category] : [$request->category]) : 
-            [...Utils::categorias])
-        ->with('imagems')->get();
+        $categories = null;
+        if(!empty($request->categories)){
+            if(is_array($request->categories)) $categories = [...$request->categories];
+            else $categories = [$request->categories];
+        }
+        else $categories = Utils::categorias;
+
+        $order = ['name', 'asc'];
+        if(!empty($request->order)) $order = explode('-', $request->order);
+
+
+
+        $produtos = Produto::whereIn('category', $categories);
+
+        if(count($whereArray))
+            $produtos = $produtos->where($whereArray);
+
+        $produtos = $produtos->orderBy($order[0], $order[1])
+            ->with('imagems')->get();
+
+
 
         return view('comprador/dashboard', [
             "produtos" => $produtos,
@@ -143,7 +161,6 @@ class CompradorController extends Controller
         if(!empty($request->name))
             $whereProduto[] = ['name', 'LIKE', '%'.$request->name."%"];
 
-
         $whereProdutoPivot = [];
         if(!empty($request->smallerPrice))
             $whereProdutoPivot[] = ['>=', $request->smallerPrice];
@@ -158,59 +175,41 @@ class CompradorController extends Controller
         }
         else $categories = Utils::categorias;
 
+        $order = ['name', 'asc'];
+        if(!empty($request->order)) $order = explode('-', $request->order);
 
-        if(empty($whereProduto) && empty($whereProdutoPivot)) {
-            $compras = Auth::user()->comprador->produtos()
-                ->whereIn('category', $categories)
-                ->get();  
-        }
 
-        if(!empty($whereProduto) && !empty($whereProdutoPivot)){
+
+
+        $compras = Auth::user()->comprador->produtos()
+            ->whereIn('category', $categories);
+
+        if(!empty($whereProduto))
+            $compras = $compras->where($whereProduto);
+
+        if(!empty($whereProdutoPivot)){
             if(count($whereProdutoPivot) > 1){
-                
-                $compras = Auth::user()->comprador->produtos()
-                    ->where($whereProduto)
-                    ->wherePivotBetween('cost', [
-                        $whereProdutoPivot[0][1],
-                        $whereProdutoPivot[1][1]
-                    ])
-                    ->whereIn('category', $categories)
-                    ->get();
+                $compras = $compras->wherePivotBetween('cost', [
+                    $whereProdutoPivot[0][1],
+                    $whereProdutoPivot[1][1]
+                ]);
             }
-            else{
-                $compras = Auth::user()->comprador->produtos()
-                    ->where($whereProduto)
-                    ->wherePivot('cost', $whereProdutoPivot[0][0], $whereProdutoPivot[0][1])
-                    ->whereIn('category', $categories)
-                    ->get();
-            }
+            else
+                $compras = $compras->wherePivot('cost', $whereProdutoPivot[0][0], $whereProdutoPivot[0][1]);
         }
-        else{
-            if(!empty($whereProduto)){
-                $compras = Auth::user()->comprador->produtos()
-                    ->where($whereProduto)
-                    ->whereIn('category', $categories)
-                    ->get();
-            }
 
-            if(!empty($whereProdutoPivot)){
-                if(count($whereProdutoPivot) > 1){
-                    $compras = Auth::user()->comprador->produtos()
-                        ->wherePivotBetween('cost', [
-                            $whereProdutoPivot[0][1],
-                            $whereProdutoPivot[1][1]
-                        ])
-                        ->whereIn('category', $categories)
-                        ->get();
-                }
-                else{
-                    $compras = Auth::user()->comprador->produtos()
-                        ->wherePivot('cost', $whereProdutoPivot[0][0], $whereProdutoPivot[0][1])
-                        ->whereIn('category', $categories)
-                        ->get();
-                }
-            }
-        }
+        $compras = $compras->get();
+
+        $orderName = $order[0];
+        $orderSort = 'sortBy'.($order[1] == 'asc' ? '' : 'Desc');
+
+        $compras = $compras->$orderSort(function($produto, $key) use ($orderName) {
+            if(in_array($orderName,["cost", 'created_at'])) return $produto->pivot->$orderName;
+            return strtolower($produto->$orderName);
+        })->values();
+
+
+
 
         return view('comprador/minhasCompras', [
             "compras" => $compras,

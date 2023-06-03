@@ -52,6 +52,7 @@ window.onload = function() {
             let smallerPrice = form.querySelector('[name="smallerPrice"]').value;
             let biggerPrice = form.querySelector('[name="biggerPrice"]').value;
             let category = window.choices.getValue(true);
+            let order = form.querySelector('[name="order"]').value;
         
             let realLocationHref = location.href.split('?')[0];
     
@@ -63,6 +64,7 @@ window.onload = function() {
             if(smallerPrice) query.push("smallerPrice="+smallerPrice);
             if(biggerPrice) query.push("biggerPrice="+biggerPrice);
             if(category.length > 0) query.push("category[]="+JSON.stringify(category));
+            if(order) query.push("order="+order);
         
             let getRequest = realLocationHref+"?"+query.join('&');
         
@@ -99,6 +101,7 @@ window.onload = function() {
             let cpf = form.querySelector('[name="cpf"]').value;
             let minDate = form.querySelector('[name="minDate"]').value;
             let maxDate = form.querySelector('[name="maxDate"]').value;
+            let order = form.querySelector('[name="order"]').value;
         
             let realLocationHref = location.href.split('?')[0];
     
@@ -116,6 +119,7 @@ window.onload = function() {
             if(minDate) query.push("minDate="+minDate);
             if(maxDate) query.push("maxDate="+maxDate);
             if(cpf) query.push("cpf="+cpf);
+            if(order) query.push("order="+order);
         
             let getRequest = realLocationHref+"?"+query.join('&');
         
@@ -153,6 +157,7 @@ window.onload = function() {
             let minCredit = form.querySelector('[name="minCredit"]').value;
             let maxCredit = form.querySelector('[name="maxCredit"]').value;
             let status = form.querySelector('[name="status"]').value;
+            let order = form.querySelector('[name="order"]').value;
         
             let realLocationHref = location.href.split('?')[0];
     
@@ -164,6 +169,7 @@ window.onload = function() {
             if(minCredit) query.push("minCredit="+minCredit);
             if(maxCredit) query.push("maxCredit="+maxCredit);
             if(status) query.push("status="+status);
+            if(order) query.push("order="+order);
         
             let getRequest = realLocationHref+"?"+query.join('&');
         
@@ -196,6 +202,7 @@ window.onload = function() {
             let maxPrice = form.querySelector('[name="maxPrice"]').value;
             let minPrice = form.querySelector('[name="minPrice"]').value;
             let categories = window.choicesCategory.getValue(true);
+            let order = form.querySelector('[name="order"]').value;
         
             let realLocationHref = location.href.split('?')[0];
     
@@ -207,6 +214,7 @@ window.onload = function() {
             if(maxPrice) query.push("maxPrice="+maxPrice);
             if(minPrice) query.push("minPrice="+minPrice);
             if(categories.length > 0) query.push("categories="+JSON.stringify(categories));
+            if(order) query.push("order="+order);
         
             let getRequest = realLocationHref+"?"+query.join('&');
         

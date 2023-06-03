@@ -116,6 +116,59 @@
                         @enderror
                     </div>
                 </div>
+                <div class="col-12 col-md-4">
+                    <label for="order">Ordenar</label>
+                    <select name="order" id="order" 
+                        class="form-control @error('order') is-invalid @enderror">
+                        <option value="name-asc" 
+                            {{
+                                empty(app('request')->input('order')) ? 'selected' :  
+                                    (app('request')->input('order') == 'name-asc' ? 'selected' : '')
+                            }}>
+                            A-Z
+                        </option>
+                        <option value="name-desc" 
+                            {{
+                                empty(app('request')->input('order')) ? '' :  
+                                    (app('request')->input('order') == 'name-desc' ? 'selected' : '')
+                            }}>
+                            Z-A
+                        </option>
+                        <option value="credits-asc" 
+                            {{
+                                empty(app('request')->input('order')) ? '' :  
+                                    (app('request')->input('order') == 'credits-asc' ? 'selected' : '')
+                            }}>
+                            Menor Crédito
+                        </option>
+                        <option value="credits-desc" 
+                            {{
+                                empty(app('request')->input('order')) ? '' :  
+                                    (app('request')->input('order') == 'credits-desc' ? 'selected' : '')
+                            }}>
+                            Maior Crédito
+                        </option>
+                        <option value="birth_date-desc" 
+                            {{
+                                empty(app('request')->input('order')) ? '' :  
+                                    (app('request')->input('order') == 'birth_date-desc' ? 'selected' : '')
+                            }}>
+                            Mais novo
+                        </option>
+                        <option value="birth_date-asc"  
+                            {{
+                                empty(app('request')->input('order')) ? '' :  
+                                    (app('request')->input('order') == 'birth_date-asc' ? 'selected' : '')
+                            }}>
+                            Mais velho
+                        </option>
+                    </select>
+                    @error('order')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
                 <div class="col-12">
                     <button class="btn btn-secondary w-100">Filtrar</button>
                 </div>
