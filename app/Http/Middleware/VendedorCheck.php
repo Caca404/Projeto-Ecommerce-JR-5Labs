@@ -18,8 +18,12 @@ class VendedorCheck
     public function handle($request, Closure $next)
     {
         if (Auth::user()->type == 'vendedor') {
-
-            return $next($request);
+            if(Auth::user()->vendedor->status == "A"){
+                return $next($request);
+            }
+            elseif(strpos($request->route()->getName(), 'dashboard') != false){
+                return $next($request);
+            }
         } 
 
         return redirect()->route(Auth::user()->type.'/dashboard');

@@ -9,7 +9,12 @@
                 {{ session('status') }}
             </div>
         @endif
-        @error('id', 'credits')
+        @error('credits')
+            <div class="alert alert-danger" role="alert">
+                <b>{{ $message }}</b>
+            </div>
+        @enderror
+        @error('id')
             <div class="alert alert-danger" role="alert">
                 <b>{{ $message }}</b>
             </div>
@@ -93,7 +98,9 @@
                             </a>
                         @else
                             <a href="/comprador/add-carrinho/{{ $produto->id }}" 
-                                class="btn btn-danger w-100 mt-3 p-2">
+                                class="btn btn-light border shadow-sm w-100 mt-3 p-2">
+
+                                <i class="fa-solid fa-cart-shopping"></i>
                                 Adicionar ao carrinho
                             </a>
                         @endif

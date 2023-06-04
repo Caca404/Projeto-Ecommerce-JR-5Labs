@@ -4,8 +4,13 @@
 
 @section('content')
 <div class="container">
-    @error('message')
+    @if (session('status'))
         <div class="alert alert-success" role="alert">
+            {{ session('status') }}
+        </div>
+    @endif
+    @error('message')
+        <div class="alert alert-danger" role="alert">
             {{ $message }}
         </div>
     @enderror
@@ -55,7 +60,7 @@
                     <div class="col-12 col-md-6 mb-3">
                         <label for="maxCredit">Maior crédito</label>
                         <input type="number" class="form-control @error('maxCredit') is-invalid @enderror" 
-                            min="0" max="100000" id="maxCredit" name="maxCredit" 
+                            min="0" max="1000000" id="maxCredit" name="maxCredit" 
                             value="{{app('request')->input('maxCredit') ?? 0}}">
 
                         @error('maxCredit')
@@ -70,7 +75,9 @@
                     <select name="status" id="status" 
                         class="form-control @error('status') is-invalid @enderror">
 
-                        <option value="" selected disabled>Selecione um status</option>
+                        <option value="" {{empty(app('request')->input('status')) ? 'selected' : ''}}>
+                            Selecione um status
+                        </option>
                         <option value="A" {{app('request')->input('status') == 'A' ? 'selected': ''}}>
                             Aceito
                         </option>

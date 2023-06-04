@@ -32,7 +32,7 @@ class AdminController extends Controller
             'minDate' => 'date|lte:maxDate',
             'maxDate' => 'date|gte:minDate',
             'minCredit' => 'numeric|min:0|lte:maxCredit',
-            'maxCredit' => 'numeric|min:0|gte:minCredit',
+            'maxCredit' => 'numeric|min:0|max:1000000|gte:minCredit',
             'states' => Rule::in(array_keys(Utils::states)),
             'order' => Rule::in(array_keys($orderTypes))
         ]);
@@ -59,26 +59,32 @@ class AdminController extends Controller
         
 
         $compradores = Comprador::whereIn('state', $states);
+        $existUser = true;
 
-        if(count($whereArray))
-            $compradores = $compradores->where($whereArray);
-        
         if(!empty($whereParent)){
-
             $users = User::where($whereParent)->get();
-
-            $compradores = $compradores->whereBelongsTo($users);
+            if(count($users) == 0) {
+                $existUser = false;
+                $compradores = [];
+            }
+            else $compradores = $compradores->whereBelongsTo($users);
         }
 
-        $compradores = $compradores->get();
+        if(count($whereArray) && $existUser)
+            $compradores = $compradores->where($whereArray);
+        
 
-        $orderName = $order[0];
-        $orderSort = 'sortBy'.($order[1] == 'asc' ? '' : 'Desc');
+        if($existUser){
+            $compradores = $compradores->get();
 
-        $compradores = $compradores->$orderSort(function($comprador, $key) use ($orderName) {
-            if($orderName == 'name') return strtolower($comprador->user->$orderName);
-            else return $comprador->$orderName;
-        })->values();
+            $orderName = $order[0];
+            $orderSort = 'sortBy'.($order[1] == 'asc' ? '' : 'Desc');
+
+            $compradores = $compradores->$orderSort(function($comprador, $key) use ($orderName) {
+                if($orderName == 'name') return strtolower($comprador->user->$orderName);
+                else return $comprador->$orderName;
+            })->values();
+        }
 
 
 
@@ -103,7 +109,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'string|nullable',
             'minCredit' => 'numeric|min:0|lte:maxCredit',
-            'maxCredit' => 'numeric|min:0|gte:minCredit',
+            'maxCredit' => 'numeric|min:0|max:1000000|gte:minCredit',
             'status' => Rule::in(['A', 'P', 'R']),
             'order' => Rule::in(array_keys($orderTypes))
         ]);
@@ -121,29 +127,32 @@ class AdminController extends Controller
 
 
 
-        $vendedores = null;
+        $vendedores = [];
+        $existUser = true;
 
         if(count($whereParent)){
             $users = User::where($whereParent)->get();
-
-            $vendedores = Vendedor::whereBelongsTo($users);
+            if(count($users) == 0) $existUser = false;
+            else $vendedores = Vendedor::whereBelongsTo($users);
         }
 
-        if(count($whereArray)){
+        if(count($whereArray) && $existUser){
             if($vendedores == null) $vendedores = Vendedor::where($whereArray);
             else $vendedores = $vendedores->where($whereArray);
         }
 
-        if($vendedores != null) $vendedores = $vendedores->get();
-        else $vendedores = Vendedor::all();
-
-        $orderName = $order[0];
-        $orderSort = 'sortBy'.($order[1] == 'asc' ? '' : 'Desc');
-
-        $vendedores = $vendedores->$orderSort(function($vendedor, $key) use ($orderName) {
-            if($orderName == "name") return strtolower($vendedor->user->name);
-            return $vendedor->$orderName;
-        })->values();
+        if($existUser){
+            if($vendedores != null) $vendedores = $vendedores->get();
+            else $vendedores = Vendedor::all();
+    
+            $orderName = $order[0];
+            $orderSort = 'sortBy'.($order[1] == 'asc' ? '' : 'Desc');
+    
+            $vendedores = $vendedores->$orderSort(function($vendedor, $key) use ($orderName) {
+                if($orderName == "name") return strtolower($vendedor->user->name);
+                return $vendedor->$orderName;
+            })->values();
+        }
 
 
 
@@ -171,7 +180,7 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'string|nullable',
             'minPrice' => 'numeric|min:0|lte:maxPrice',
-            'maxPrice' => 'numeric|min:0|gte:minPrice',
+            'maxPrice' => 'numeric|min:0|max:1000000|gte:minPrice',
             'category' => Rule::in(Utils::categorias),
             'order' => Rule::in(array_keys($orderTypes)) 
         ]);
@@ -222,7 +231,7 @@ class AdminController extends Controller
             'decision' => [
                 'required',
                 Rule::in([
-                    'S', 'N'
+                    'A', 'R'
                 ])
             ]
         ]);
@@ -233,8 +242,8 @@ class AdminController extends Controller
             $vendedor->status = $request->decision;
             if($vendedor->save())
                 return back()->with([
-                    'message' => 'Vendedor foi '.($request->decision == "A" ? 'Aceito' : "Rejeitado")
-                        .'com sucesso.'
+                    'status' => 'Vendedor foi '.($request->decision == "A" ? 'Aceito' : "Rejeitado")
+                        .' com sucesso.'
                 ]);
         }
 

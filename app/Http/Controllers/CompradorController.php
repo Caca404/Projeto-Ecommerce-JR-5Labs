@@ -64,9 +64,9 @@ class CompradorController extends Controller
             $whereArray[] = ['name', 'LIKE', '%'.$request->name."%"];
 
         $categories = null;
-        if(!empty($request->categories)){
-            if(is_array($request->categories)) $categories = [...$request->categories];
-            else $categories = [$request->categories];
+        if(!empty($request->category)){
+            if(is_array($request->category)) $categories = [...$request->category];
+            else $categories = [$request->category];
         }
         else $categories = Utils::categorias;
 
@@ -110,14 +110,13 @@ class CompradorController extends Controller
 
     public function buy(Request $request)
     {
-        $request->merge([
-            'id' => $request->route('id')
-        ]);
-        $request->validate([
-            'id' => 'required|exists:produtos,id'
-        ]);
-
         $produto = Produto::find($request->id);
+        
+        if($produto == null)
+            return back()->withErrors([
+                'id' => "Produto inexistente"
+            ]);
+
         $comprador = Auth::user()->comprador;
         
         if($comprador->credits < $produto->price)
@@ -242,13 +241,22 @@ class CompradorController extends Controller
     public function update(UpdateCompradorRequest $request, User $user)
     {
         $user = Auth::user();
-
-        $user->update($request->all());
-
+        
         if(!empty($request->email)){
-            $user->email_verified_at = null;
-            $user->save();
+            if($request->email != $user->email){
+                $user->email_verified_at = null;
+                $user->save();
+            }
         }
+
+        $user->update($request->only(['name', 'email']));
+
+        $user->comprador->cpf = $request->cpf;
+        $user->comprador->birth_date = $request->birth_date;
+        $user->comprador->state = $request->state;
+        $user->comprador->city = $request->city;
+        $user->comprador->save();
+
 
         return redirect()->route('comprador/perfil');
     }

@@ -110,12 +110,11 @@
                 </form>
             </div>
         </div>
-        <a href="/produto" class="btn btn-primary mt-3 mb-5 col-12 col-md-3 offset-md-7">
+        <a href="/vendedor/produto" class="btn btn-primary mt-3 mb-5 col-12 col-md-3 offset-md-7">
             <i class="fa-solid fa-plus"></i>
             Adicionar produtos
         </a>
     @endif
-
     <div class="row align-cards g-3">
         @if (Auth::user()->vendedor->status == "P")
             <div class="col-12 col-md-8 mx-md-auto">
@@ -127,7 +126,7 @@
             </div>
         @elseif (Auth::user()->vendedor->status == "R")   
             <div class="col-md-8">
-                <div class="card bg-warning">
+                <div class="card bg-danger text-white fw-bold">
                     <div class="card-body">
                         {{ __('Infelizmente, você não poderá usar o site, pois rejeitado.') }}
                     </div>
@@ -196,7 +195,7 @@
                                 Olá, vendedor. Deseja cadastrar seus produtos para começar
                                 sua venda?
                             </h4>
-                            <button onclick="location.href='/produto'" class="btn btn-warning mt-4">
+                            <button onclick="location.href='/vendedor/produto'" class="btn btn-warning mt-4">
                                 Cadastrar Novo Produto
                             </button>
                         </div>

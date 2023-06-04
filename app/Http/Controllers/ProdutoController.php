@@ -14,23 +14,22 @@ class ProdutoController extends Controller
 {
     public function produto(Request $request)
     {
-        $request->merge(['id' => $request->route('id')]);
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:produtos,id'
-        ]);
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
-
-        if(Auth::user()->vendedor->status == "P") 
-            return redirect()->route('vendedor/dashboard');
-
         $produto = [];
 
-        if(!empty($request->id))
+        if(!empty($request->id)){
+            $request->merge(['id' => $request->id]);
+            $validator = Validator::make($request->all(), [
+                'id' => 'sometimes|required|exists:produtos,id'
+            ]);
+
+            if ($validator->fails()) {
+                return back()->withErrors($validator);
+            }
+    
             $produto = Produto::where('id', $request->id)
                 ->with('imagems')->first();
-        
+        }
+
         return view('vendedor/produto', [
             'produto' => $produto, 
             'categorias' => Utils::categorias
@@ -137,7 +136,7 @@ class ProdutoController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator);
         }
-        
+
         $request->imagesToRemove = json_decode($request->imagesToRemove[0]);
 
         $request->validate([

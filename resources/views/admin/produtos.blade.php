@@ -55,7 +55,7 @@
                     <div class="col-12 col-md-6 mb-3">
                         <label for="maxPrice">Maior Preço</label>
                         <input type="number" class="form-control @error('maxPrice') is-invalid @enderror" 
-                            min="0" max="100000" id="maxPrice" name="maxPrice" 
+                            min="0" max="1000000" id="maxPrice" name="maxPrice" 
                             value="{{app('request')->input('maxPrice') ?? 0}}">
 
                         @error('maxPrice')

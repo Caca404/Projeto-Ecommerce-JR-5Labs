@@ -13,18 +13,18 @@
     @enderror
     @if (empty(Auth::user()->email_verified_at))
         <div class="alert alert-warning mb-5 text-dark d-flex" role="alert">
-            <span>
-                @if(empty(Auth::user()->has_verified_email_before))
-                    Foi enviado ao seu email a validação dele. 
-                    <b>Se validar você ganhará R$ 10.000 em créditos. </b> 
-                @endif
-                Caso queira reenviar o link de verificação clique no seguinte link:
-            </span>
             <form class="ms-2" id="sendEmailVerification" action="{{ route('verification.send') }}" method="post">
                 @csrf
+                <span>
+                    @if(empty(Auth::user()->has_verified_email_before))
+                        Foi enviado ao seu email a validação dele. 
+                        <b>Se validar você ganhará R$ 10.000 em créditos. </b> 
+                    @endif
+                    Caso queira reenviar o link de verificação clique no seguinte link:
+                    <a class="text-dark" onclick="document.querySelector('#sendEmailVerification').submit()" 
+                        href="#">Reenviar</a>
+                </span>
 
-                <a class="text-dark" onclick="document.querySelector('#sendEmailVerification').submit()" 
-                    href="#">Reenviar</a>
             </form> 
         </div>
     @endif
@@ -184,9 +184,9 @@
                 </div>
             @endforeach
         @else
-            <div class="card col-md-8 bg-danger text-white">
+            <div class="card col-12 col-md-8 mx-md-auto bg-danger text-white">
                 <div class="card-body">
-                    <h4>Ops! Estamos sem produtos no momento.</h4>
+                    <h5>Ops! Estamos sem produtos no momento.</h5>
                 </div>
             </div>
         @endif
