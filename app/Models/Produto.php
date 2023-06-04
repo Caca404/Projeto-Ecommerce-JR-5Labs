@@ -48,7 +48,7 @@ class Produto extends Model
 
     public function comentarios()
     {
-        return $this->belongsToMany(Comprador::class, 'comentarios')
+        return $this->belongsToMany(User::class, 'comentarios')
             ->withPivot('comentary')
             ->withTimestamps();
     }

@@ -40,11 +40,4 @@ class Comprador extends Model
         return $this->belongsToMany(Produto::class, 'carrinhos')
             ->withTimestamps();
     }
-
-    public function comentarios()
-    {
-        return $this->belongsToMany(Produto::class, 'comentarios')
-            ->withPivot('comentary')
-            ->withTimestamps();
-    }
 }

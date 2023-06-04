@@ -59,4 +59,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Vendedor::class);
     }
+
+    public function comentarios()
+    {
+        return $this->belongsToMany(Produto::class, 'comentarios')
+            ->withPivot('comentary')
+            ->withTimestamps();
+    }
 }

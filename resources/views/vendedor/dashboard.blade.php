@@ -135,7 +135,7 @@
         @elseif (count($produtos))    
             @foreach ($produtos as $produto)
                 <div class="col-12 col-md-3 mb-3 mb-md-0 d-flex align-items-stretch">
-                    <a href="/produto/edit/{{$produto->id}}" class="text-dark text-decoration-none w-100">
+                    <a href="/produto/seeComentaries/{{$produto->id}}" class="text-dark text-decoration-none w-100">
                         <div class="card h-100">
                             @if($produto->imagems->count())
                                 <div class="flex-fill d-flex">

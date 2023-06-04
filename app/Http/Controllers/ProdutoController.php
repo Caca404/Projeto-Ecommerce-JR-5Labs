@@ -46,20 +46,31 @@ class ProdutoController extends Controller
             return back()->withErrors($validator);
         }
 
+        $userType = Auth::user()->type == 'comprador';
 
         $produto = Produto::where('id', $request->id)
             ->with('imagems')
             ->first();
-        
-        $produto->visualization++;
-        $produto->save();
 
-        $isFavorited = $produto->compradors_favorito()
-            ->where('comprador_id', Auth::user()->comprador->id)->count();
+        if($produto == null)
+            return back()->withErrors(['id', 'Produto Inexistente']);
 
-        $isInShoppingCart = $produto->carrinhos()
-            ->where('comprador_id', Auth::user()->comprador->id)->count();
-        
+
+        if($userType){
+            
+            $produto->visualization++;
+            $produto->save();
+    
+    
+    
+            $isFavorited = $produto->compradors_favorito()
+                ->where('comprador_id', Auth::user()->comprador->id)->count();
+    
+            $isInShoppingCart = $produto->carrinhos()
+                ->where('comprador_id', Auth::user()->comprador->id)->count();
+        }
+
+
         $numeroAvaliacoes = 0;
         $mediaAvaliacoes = 0;
 
@@ -76,12 +87,19 @@ class ProdutoController extends Controller
         if($numeroAvaliacoes > 0)
             $mediaAvaliacoes = round($mediaAvaliacoes/$numeroAvaliacoes);
 
+
+        $comentarios = $produto->comentarios()
+            ->where('produto_id', $produto->id)
+            ->get();
+
+
         return view('comprador/produto', [
             'produto' => $produto,
-            'isFavorited' => $isFavorited > 0,
-            'isInShoppingCart' => $isInShoppingCart > 0,
+            'isFavorited' => $userType ? $isFavorited > 0 : false,
+            'isInShoppingCart' => $userType ? $isInShoppingCart > 0 : false,
             'mediaAvaliacoes' => $mediaAvaliacoes,
-            'numeroAvaliacoes' => $numeroAvaliacoes
+            'numeroAvaliacoes' => $numeroAvaliacoes,
+            'comentarios' => $comentarios
         ]);
     }
 

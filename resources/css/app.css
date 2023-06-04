@@ -21,6 +21,11 @@
     border-color: rgb(221, 145, 3);
 }
 
+.carousel-item img {
+    margin: 0 auto;
+    width: auto;
+}
+
 .star-wrapper {
     direction: rtl
 }

@@ -7,7 +7,7 @@
         <h3>Minhas vendas</h3>
         <hr class="mb-5 mt-3">
         <div class="row g-3">
-            @if(!empty($vendas))
+            @if(count($vendas))
                 @foreach ($vendas as $produto)
                     @foreach ($produto->compradors as $venda)
                         <div class="col-12 col-md-8 mx-auto">
@@ -49,6 +49,10 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4 mt-3 mt-md-0">
+                                        <a href="/produto/seeComentaries/{{$produto->id}}" 
+                                            class="btn btn-outline-dark w-100 p-2 mb-3">
+                                            Ver Produto
+                                        </a>
                                         <a href="/produto/edit/{{$produto->id}}" class="btn btn-warning w-100 p-2">
                                             Editar Produto
                                         </a>

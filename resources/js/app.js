@@ -231,4 +231,11 @@ window.onload = function() {
             document.querySelector('#filtrosProdutosFromAdmin [name="maxPrice"]').setAttribute('min', minPrice);
         });
     }
+
+    if(location.href.indexOf('produto')!= -1){
+        var minHeight = document.querySelector('#carouselExampleControlsNoTouching').clientHeight;
+        document.querySelectorAll('#carouselExampleControlsNoTouching .carousel-item img').forEach(elem => {
+            elem.style.minHeight = minHeight+"px";
+        });
+    }
 };

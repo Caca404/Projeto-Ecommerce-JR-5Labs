@@ -21,25 +21,25 @@
         @enderror
         <div class="row g-3">
             <div class="col-12 col-md-8 mb-3 mb-md-0">
-                <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-ride="carousel"
-                    data-bs-pause="hover">
+                <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="true" 
+                    data-bs-interval="false">
                     <div class="carousel-inner">
                         @foreach ($produto->imagems as $imagem)
                             <div
                                 class="carousel-item bg-secondary 
                                     {{ $loop->index == $produto->imagems->count() - 1 ? 'active' : '' }}">
 
-                                <img src="{{ $imagem->path }}" class="d-block w-75 mx-auto">
+                                <img src="{{ $imagem->path }}" class="d-block">
                             </div>
                         @endforeach
                     </div>
                     @if(count($produto->imagems) > 1)
-                        <button class="carousel-control-prev d-none d-md-flex" type="button"
+                        <button class="carousel-control-prev" type="button"
                             data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next d-none d-md-flex" type="button"
+                        <button class="carousel-control-next" type="button"
                             data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
@@ -87,47 +87,111 @@
                             {{ $produto->description }}
                         </p>
                     </div>
-                    <div class="card-footer bg-white mt-1">
-                        <form action="/buy/{{ $produto->id }}" method="GET">
-                            @csrf
-                            <button class="btn btn-warning w-100 p-2">
-                                <i class="fa-solid fa-dollar-sign"></i>
-                                Comprar agora
-                            </button>
-                        </form>
-                        @if($isInShoppingCart)
-                            <a href="/comprador/remove-carrinho/{{ $produto->id }}" 
-                                class="btn btn-dark w-100 mt-3 p-2">
-                                
-                                <i class="fa-solid fa-trash"></i>
-                                Remover do carrinho
-                            </a>
-                        @else
-                            <a href="/comprador/add-carrinho/{{ $produto->id }}" 
-                                class="btn btn-light border shadow-sm w-100 mt-3 p-2">
+                    @if(Auth::user()->type == 'comprador')
+                        <div class="card-footer bg-white mt-1">
+                            <form action="/buy/{{ $produto->id }}" method="GET">
+                                @csrf
+                                <button class="btn btn-warning w-100 p-2">
+                                    <i class="fa-solid fa-dollar-sign"></i>
+                                    Comprar agora
+                                </button>
+                            </form>
+                            @if($isInShoppingCart)
+                                <a href="/comprador/remove-carrinho/{{ $produto->id }}" 
+                                    class="btn btn-dark w-100 mt-3 p-2">
+                                    
+                                    <i class="fa-solid fa-trash"></i>
+                                    Remover do carrinho
+                                </a>
+                            @else
+                                <a href="/comprador/add-carrinho/{{ $produto->id }}" 
+                                    class="btn btn-light border shadow-sm w-100 mt-3 p-2">
 
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                Adicionar ao carrinho
-                            </a>
-                        @endif
-                        
-                        
-                        @if($isFavorited)
-                            <a href="/desfavoritar/{{ $produto->id }}" 
-                                class="btn btn-secondary w-100 mt-3 p-2">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    Adicionar ao carrinho
+                                </a>
+                            @endif
+                            
+                            
+                            @if($isFavorited)
+                                <a href="/desfavoritar/{{ $produto->id }}" 
+                                    class="btn btn-secondary w-100 mt-3 p-2">
 
-                                <i class="fa-solid fa-trash"></i>
-                                Desfavoritar
-                            </a>
-                        @else
-                            <a href="/favoritar/{{ $produto->id }}" 
-                                class="btn btn-orange w-100 mt-3 p-2">
+                                    <i class="fa-solid fa-trash"></i>
+                                    Desfavoritar
+                                </a>
+                            @else
+                                <a href="/favoritar/{{ $produto->id }}" 
+                                    class="btn btn-orange w-100 mt-3 p-2">
 
-                                <i class="fa-solid fa-star"></i>
-                                Favoritar
+                                    <i class="fa-solid fa-star"></i>
+                                    Favoritar
+                                </a>
+                            @endif
+                        </div>
+                    @elseif(Auth::user()->type == 'vendedor')
+                        <div class="card-footer bg-white mt-1">
+                            <a href="/produto/edit/{{$produto->id}}" 
+                                class="btn btn-warning w-100 p-2">
+
+                                Editar Produto
                             </a>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <hr class="mb-4 mt-5">
+        <div class="row g-3">
+            <h4>{{count($comentarios)}} comentários</h4>
+            <div class="col-12 col-lg-6 mt-2 mb-4">
+                <div class="border rounded shadow-sm p-3 bg-light position-sticky" style="top: 10px">
+                    <form action="/comentary/{{$produto->id}}" method="post" class="text-end">
+                        @csrf
+
+                        <div class="mb-3">
+                            <textarea class="form-control @error('email') is-invalid @enderror" 
+                                name="comentary" id="comentary" 
+                                cols="30" rows="1" required
+                                placeholder="Adicione seu comentário"
+                                style="max-height: 150px" maxlength="3000"
+                                >{{old('comentary')}}</textarea>
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary w-25">Enviar</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 mt-md-2">
+                <div class="shadow-sm border rounded p-3 bg-light">
+                    @if(count($comentarios))
+                        @foreach($comentarios as $comentario)
+                            <div class="card {{$loop->index == 0 ? '' : 'mt-3'}}">
+                                <div class="card-header d-flex 
+                                    justify-content-between bg-white fst-italic">
+                                    <div>
+                                        <i class="fa-solid fa-user text-secondary"></i>
+                                        {{$comentario->name}}
+                                    </div>
+                                    <div>
+                                        <i class="fa-solid fa-clock text-secondary"></i>
+                                        {{
+                                            date("d/m/Y H:i", strtotime($comentario->pivot->created_at))
+                                        }}
+                                    </div>
+                                </div>
+                                <div class="card-body p-2 px-4">
+                                    {{$comentario->pivot->comentary}}
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <h6>Esse produto não tem comentários no momento.</h6>
+                    @endif
                 </div>
             </div>
         </div>

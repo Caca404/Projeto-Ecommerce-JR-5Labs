@@ -456,4 +456,21 @@ class CompradorController extends Controller
 
         return back()->with('status', 'Avaliação feita com sucesso.');
     }
+
+    public function createComentary(Request $request)
+    {
+        $request->validate([
+            'comentary' => 'required|string|max:3000'
+        ]);
+
+        $produto = Produto::find($request->id);
+        if($produto == null)
+            return back()->withErrors(['id', 'Produto inexistente.']);
+
+        $produto->comentarios()->attach(Auth::user()->id, [
+            'comentary' => $request->comentary
+        ]);
+
+        return back()->with(['status', 'Comentário adicionado ao produto com sucesso.']);
+    }
 }
