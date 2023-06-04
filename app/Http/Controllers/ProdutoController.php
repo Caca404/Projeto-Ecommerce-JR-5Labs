@@ -63,7 +63,8 @@ class ProdutoController extends Controller
         $numeroAvaliacoes = 0;
         $mediaAvaliacoes = 0;
 
-        $avaliacoes = $produto->avaliacoes()
+        $avaliacoes = $produto->compradors()
+            ->wherePivot('rating', '<>', 'null')
             ->where('produto_id', $produto->id)
             ->get();
 

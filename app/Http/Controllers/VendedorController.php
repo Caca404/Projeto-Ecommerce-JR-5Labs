@@ -93,6 +93,22 @@ class VendedorController extends Controller
 
         $vendas = Produto::where('vendedor_id', Auth::user()->vendedor->id)
             ->with('compradors')->with('imagems')->get();
+
+        // $numeroAvaliacoes = 0;
+        // $mediaAvaliacoes = 0;
+
+        // $avaliacoes = $produto->compradors()
+        //     ->wherePivot('rating', '<>', 'null')
+        //     ->where('produto_id', $produto->id)
+        //     ->get();
+
+        // foreach ($avaliacoes as $avaliacao) {
+        //     $mediaAvaliacoes += $avaliacao->pivot->rating;
+        //     $numeroAvaliacoes++;
+        // }
+
+        // if($numeroAvaliacoes > 0)
+        //     $mediaAvaliacoes = round($mediaAvaliacoes/$numeroAvaliacoes);
         
         return view('vendedor/minhasVendas', ['vendas' => $vendas]);
     }

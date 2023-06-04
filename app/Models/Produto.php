@@ -25,8 +25,8 @@ class Produto extends Model
     
     public function compradors()
     {
-        return $this->belongsToMany(Comprador::class)
-            ->withPivot('cost')->withTimestamps();
+        return $this->belongsToMany(Comprador::class, 'vendas')
+            ->withPivot('cost', 'rating', 'id')->withTimestamps();
     }
 
     public function imagems()
@@ -46,10 +46,10 @@ class Produto extends Model
             ->withTimestamps();
     }
 
-    public function avaliacoes()
+    public function comentarios()
     {
-        return $this->belongsToMany(Comprador::class, 'avaliacao')
-            ->withPivot('rating')
+        return $this->belongsToMany(Comprador::class, 'comentarios')
+            ->withPivot('comentary')
             ->withTimestamps();
     }
 }

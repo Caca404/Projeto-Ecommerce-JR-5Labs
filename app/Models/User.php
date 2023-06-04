@@ -50,11 +50,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'vendedor' => Vendedor::class
     ];
 
-    public function admin()
-    {
-        return $this->hasOne(Admin::class);
-    }
-
     public function comprador()
     {
         return $this->hasOne(Comprador::class);

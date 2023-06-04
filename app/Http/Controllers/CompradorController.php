@@ -12,6 +12,7 @@ use App\Utils\Utils;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -422,7 +423,7 @@ class CompradorController extends Controller
         return back()->with('status', 'Carrinho de compras limpado com sucesso.');
     }
 
-    public function rateProduct(Request $request)
+    public function rateCompra(Request $request)
     {
         $request->merge([
             'id' => $request->route('id'),
@@ -441,18 +442,17 @@ class CompradorController extends Controller
             return back()->withErrors($validator);
         }
 
-        $produto = Produto::find($request->id);
         $comprador = Auth::user()->comprador;
-        $hasAvaliacao = $comprador->avaliacoes()
-            ->where('produto_id', $request->id)->count() > 0;
+        $hasVenda = $comprador->produtos()
+            ->wherePivot('id', $request->id)
+            ->count() > 0;
 
-        if($hasAvaliacao){
-            $comprador->avaliacoes()->updateExistingPivot($produto->id, [
-                'rating' => $request->rating
-            ]);
+        if($hasVenda){
+            DB::table('vendas')
+                ->where('id', $request->id)
+                ->update(['rating' => $request->rating]);
         }
-        else 
-            $comprador->avaliacoes()->attach($produto, ['rating' => $request->rating]);
+        else return back()->withErrors(['id', 'Compra inexistente.']);
 
         return back()->with('status', 'Avaliação feita com sucesso.');
     }

@@ -103,9 +103,11 @@
                                 </li>
                             @else
                                 <li class="nav-item text-secondary">
-                                    <a href="#" class="nav-link d-flex">
+                                    <a href="#" class="nav-link d-flex align-items-center">
                                         <i class="fa-solid fa-user me-2"></i>
-                                        <h6 class="mb-0">R$ {{ number_format(Auth::user()->vendedor->credits, 2, ',', '.')}}</h6>
+                                        <span class="mb-0 fw-bold">
+                                            R$ {{ number_format(Auth::user()->vendedor->credits, 2, ',', '.')}}
+                                        </span>
                                     </a>
                                 </li>
                                 @if(Auth::user()->vendedor->status == 'A')

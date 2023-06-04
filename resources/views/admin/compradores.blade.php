@@ -108,7 +108,7 @@
                         <label for="maxDate">Até</label>
                         <input type="date" class="form-control @error('maxDate') is-invalid @enderror" 
                             id="maxDate" name="maxDate" max="{{date('Y-m-d')}}" 
-                            value="{{app('request')->input('maxDate')}}">
+                            value="{{app('request')->input('maxDate') ?? date('Y-m-d')}}">
                         @error('maxDate')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

@@ -29,13 +29,30 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'string|nullable',
             'cpf' => 'string|max:11',
-            'minDate' => 'date|lte:maxDate',
-            'maxDate' => 'date|gte:minDate',
+            'minDate' => 'date',
+            'maxDate' => 'date',
             'minCredit' => 'numeric|min:0|lte:maxCredit',
             'maxCredit' => 'numeric|min:0|max:1000000|gte:minCredit',
-            'states' => Rule::in(array_keys(Utils::states)),
+            // 'states' => Rule::in(array_keys(Utils::states)),
             'order' => Rule::in(array_keys($orderTypes))
         ]);
+        
+        if(!empty($request->states)){
+            foreach($request->states as $state){
+                if(!in_array($state, array_keys(Utils::states)))
+                    return back()->withErrors(['state' => "Estado inexistente."]);
+            }
+        }
+
+        if(!empty($request->maxDate) && !empty($request->minDate)){
+            if(date('Y-m-d', strtotime($request->maxDate)) < date('Y-m-d', strtotime($request->minDate)))
+                return back()->withErrors(['maxDate', 'A data máxima deve ser maior ou igual a data minima.']);
+
+            if(date('Y-m-d', strtotime($request->minDate)) > date('Y-m-d', strtotime($request->maxDate)))
+                return back()->withErrors(['minDate', 'A data minima deve ser menor ou igual a data máxima.']);
+        }
+
+
 
         $whereArray = [];
         $whereParent = [];

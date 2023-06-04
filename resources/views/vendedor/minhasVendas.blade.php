@@ -29,15 +29,27 @@
                                                 {{ucfirst($produto->name)}}
                                             </h4>
                                         </div>
-                                        <h5 class="fw-normal">R$ {{number_format($produto->price, 2, ',', '.')}}</h5>
+                                        <h5 class="fw-normal">R$ {{number_format($venda->pivot->cost, 2, ',', '.')}}</h5>
                                         <span class="fst-italic">
                                             Comprador por:
                                             <i class="fa-solid fa-user text-secondary"></i>
                                             {{$venda->user->name}}
                                         </span>
+                                        <div class="mt-2">
+                                            <span>Avaliação</span>
+                                            <div class="star-wrapper text-start mb-4">
+                                                @for ($i = 5; $i >= 1; $i--)
+                                                    <i class="fas fa-star s{{$i}}
+                                                        {{
+                                                            $venda->pivot->rating == $i ? 'active' : ''
+                                                        }}
+                                                    "></i>
+                                                @endfor
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-12 col-md-4 mt-3 mt-md-0 row align-items-center">
-                                        <a href="/produto/edit/{{$produto->id}}" class="btn btn-warning w-100 p-3">
+                                    <div class="col-12 col-md-4 mt-3 mt-md-0">
+                                        <a href="/produto/edit/{{$produto->id}}" class="btn btn-warning w-100 p-2">
                                             Editar Produto
                                         </a>
                                     </div>

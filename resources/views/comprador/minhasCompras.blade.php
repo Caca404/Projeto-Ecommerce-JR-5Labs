@@ -148,13 +148,13 @@
                                     </span>
                                     <div class="star-wrapper text-start mt-3">
                                         @php 
-                                            $avaliacao = $comprador->avaliacoes()
-                                                ->where('produto_id', $produto->id)
+                                            $avaliacao = $comprador->produtos()
+                                                ->wherePivot('id', $produto->pivot->id)
                                                 ->first() 
                                         @endphp
 
                                         @for ($i = 5; $i >= 1; $i--)
-                                            <a href="/rate/{{$produto->id}}/{{$i}}" 
+                                            <a href="/rate/{{$produto->pivot->id}}/{{$i}}" 
                                                 class="fas fa-star s{{$i}}
                                                 {{
                                                     !empty($avaliacao) ? ($avaliacao->pivot->rating == $i ? 'active' : '') : ''
