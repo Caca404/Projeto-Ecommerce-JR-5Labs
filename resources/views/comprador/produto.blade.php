@@ -21,14 +21,8 @@
         @enderror
         <div class="row g-3">
             <div class="col-12 col-md-8 mb-3 mb-md-0">
-                <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-interval="false">
-                    <div class="carousel-indicators">
-                        @foreach ($produto->imagems as $imagem)
-                            <button type="button" data-bs-target="#carouselExampleControlsNoTouching"
-                                data-bs-slide-to="{{ $loop->index }}" class="active" aria-current="true"
-                                aria-label="Slide {{ $loop->index + 1 }}"></button>
-                        @endforeach
-                    </div>
+                <div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-ride="carousel"
+                    data-bs-pause="hover">
                     <div class="carousel-inner">
                         @foreach ($produto->imagems as $imagem)
                             <div
@@ -39,16 +33,28 @@
                             </div>
                         @endforeach
                     </div>
-                    <button class="carousel-control-prev d-none d-md-flex" type="button"
-                        data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next d-none d-md-flex" type="button"
-                        data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                    @if(count($produto->imagems) > 1)
+                        <button class="carousel-control-prev d-none d-md-flex" type="button"
+                            data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next d-none d-md-flex" type="button"
+                            data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    @endif
+                </div>
+                <div class="row mt-3 g-3">
+                    @foreach ($produto->imagems as $image)
+                        <div class="col-4 d-flex align-items-stretch">
+                            <button type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide-to="{{$loop->index}}"
+                                class="btn border shadow-sm w-100" aria-current="true" aria-label="Slide {{$loop->index+1}}">
+                                <img width="70" src="{{$image->path}}" alt="img {{$loop->index+1}}">
+                            </button>
+                        </div>
+                    @endforeach
                 </div>
             </div>
             <div class="col-12 col-md-4 mb-3 mb-md-0 d-flex flex-column justify-content-between">

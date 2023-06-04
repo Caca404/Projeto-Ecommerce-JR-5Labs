@@ -9,6 +9,16 @@
                 {{ session('status') }}
             </div>
         @endif
+        @error('id')
+            <div class="alert alert-danger" role="alert">
+                <b>{{ $message }}</b>
+            </div>
+        @enderror
+        @error('images')
+            <div class="alert alert-danger" role="alert">
+                <b>{{ $message }}</b>
+            </div>
+        @enderror
         <h3 class="mb-4">{{ !empty($produto) ? $produto->name : 'Criar novo produto' }}</h3>
         <hr class="mb-5 mt-3">
         <form action="{{ !empty($produto) ? '/produto/edit/'.$produto->id : '/produto/create' }}" method="POST" 
@@ -40,7 +50,7 @@
                         @foreach ($produto->imagems as $image)
                             <div class="col-4 d-flex align-items-stretch">
                                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{$loop->index}}"
-                                    class="btn border shadow-sm" aria-current="true" aria-label="Slide {{$loop->index+1}}">
+                                    class="btn border shadow-sm w-100" aria-current="true" aria-label="Slide {{$loop->index+1}}">
                                     <img width="70" src="{{$image->path}}" alt="img {{$loop->index+1}}">
                                 </button>
                                 <i class="fa-solid fa-circle-xmark text-danger withRemove fa-xl" style="height: 0"

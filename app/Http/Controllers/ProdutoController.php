@@ -118,8 +118,7 @@ class ProdutoController extends Controller
             $imageName = md5($imagem->getClientOriginalName().strtotime("now"));
             $imagem->move(public_path('images/products'), $imageName.".".$extension);
 
-            $imagemModel->name = $imageName;
-            $imagemModel->mime = $extension;
+            $imagemModel->path = '/images/products/'.$imageName.".".$extension;
 
             $produto->imagems()->save($imagemModel);
         }
@@ -129,13 +128,11 @@ class ProdutoController extends Controller
 
     public function editProduto(Request $request)
     {
-        $request->merge(['id' => $request->route('id')]);
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:produtos,id'
-        ]);
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
+        $produto = Produto::find($request->id);
+        if($produto == null) 
+            return back()->with([
+                'id' => "Produto inexistente."
+            ]);
 
         $request->imagesToRemove = json_decode($request->imagesToRemove[0]);
 
@@ -157,29 +154,38 @@ class ProdutoController extends Controller
             'imagesToRemove.*' => 'string'
         ]);
 
-        $produto = Produto::find($request->id);
         $produto->name = $request->name;
         $produto->price = $request->price;
         $produto->category = $request->category;
         $produto->description = $request->description;
 
         $imagesInDatabase = Imagem::where('produto_id', $request->id)->count();
-        if(!empty($request->imagesToRemove))
-            if($imagesInDatabase == count($request->imagesToRemove) && empty($request->images))
+
+        if(!empty($request->imagesToRemove) && !empty($request->images))
+        {
+            $imagesTotal = $imagesInDatabase + count($request->images) - count($request->imagesToRemove);
+            if($imagesTotal > 3)
+                return back()->withErrors(['images', 'The images must not have more than 3 items.']);
+
+            if($imagesTotal == 0)
+                return back()->withErrors(['images', 'Precisa de no mínimo uma imagem.']);
+        }
+        elseif(!empty($request->imagesToRemove))
+            if($imagesInDatabase == count($request->imagesToRemove))
                 return back()->withErrors(['images', 'Precisa de no mínimo uma imagem.']);
 
-        if(!empty($request->images))
+        elseif(!empty($request->images))
             if($imagesInDatabase + count($request->images) > 3)
                 return back()->withErrors(['images', 'The images must not have more than 3 items.']);
 
+
         if(!empty($request->imagesToRemove)){
             foreach ($request->imagesToRemove as $image) {
-                $imageName = substr(
-                    $image, 
-                    strrpos($image, '/') + 1, 
-                    strrpos($image, '.') - strrpos($image, '/') - 1
-                );
-                Imagem::where('name', $imageName)->delete();
+                Imagem::where('path', $image)->delete();
+                $imagemName = str_replace('/images/products/', '', $image);
+
+                if(in_array($imagemName, scandir(public_path('/images/products/'))))
+                    unlink(public_path('images/products').'/'.$imagemName);
             }
         }
 
@@ -191,8 +197,7 @@ class ProdutoController extends Controller
                 $imageName = md5($imagem->getClientOriginalName().strtotime("now"));
                 $imagem->move(public_path('images/products'), $imageName.".".$extension);
 
-                $imagemModel->name = $imageName;
-                $imagemModel->mime = $extension;
+                $imagemModel->path = '/images/products/'.$imageName.".".$extension;
 
                 $produto->imagems()->save($imagemModel);
             }
