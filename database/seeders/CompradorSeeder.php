@@ -15,9 +15,9 @@ class CompradorSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Comprador::factory()->create([
-            'credits' => 100000,
-        ]);
+        // \App\Models\Comprador::factory()->create([
+        //     'credits' => 100000,
+        // ]);
         // \App\Models\Comprador::factory(5)
         //     ->has(Produto::factory()->count(2))
         //     ->create();
