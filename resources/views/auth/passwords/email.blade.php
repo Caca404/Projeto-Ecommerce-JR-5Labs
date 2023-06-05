@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.withoutNav')
 
 @section('title', 'Esqueci minha senha')
 

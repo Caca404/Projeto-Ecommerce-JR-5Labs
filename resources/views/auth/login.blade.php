@@ -11,7 +11,7 @@
     @endif
     <h2 class="text-center mb-5">{{ config('app.name', 'Laravel') }}</h2>
     <div class="row justify-content-center">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <h4>Login</h4>

@@ -120,7 +120,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/rate/{id}/{rating}', [CompradorController::class, 'rateCompra']);
 
-        Route::post('/comentary/{id}', [CompradorController::class, 'createComentary']);
+        Route::post('/comprador/comentary/{id}', [CompradorController::class, 'createComentary']);
     });
 
 
@@ -141,7 +141,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/produto/edit/{id}', [ProdutoController::class, 'editProduto']);
 
         Route::get('/produto/seeComentaries/{id}', [ProdutoController::class, 'show']);
-        Route::post('/comentary/{id}', [CompradorController::class, 'createComentary']);
+        Route::post('/vendedor/comentary/{id}', [CompradorController::class, 'createComentary']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);

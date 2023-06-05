@@ -18,6 +18,15 @@ window.onload = function() {
                 }
             });
         });
+
+        document.querySelector('form input[name="cpf"]').addEventListener('keypress', (e) => {
+            var charCode = (e.which) ? e.which : e.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        });
     
         function requireAllInputs($confirm) {
             document.querySelectorAll('#compradorForm input, #compradorForm select').forEach(function(elem){
@@ -124,6 +133,15 @@ window.onload = function() {
             let getRequest = realLocationHref+"?"+query.join('&');
         
             location.href = getRequest;
+        });
+
+        document.querySelector('form input[name="cpf"]').addEventListener('keypress', (e) => {
+            var charCode = (e.which) ? e.which : e.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
         });
           
         document.querySelector('#filtrosCompradorFromAdmin [name="minCredit"]').addEventListener('change', () => {
@@ -236,6 +254,17 @@ window.onload = function() {
         var minHeight = document.querySelector('#carouselExampleControlsNoTouching').clientHeight;
         document.querySelectorAll('#carouselExampleControlsNoTouching .carousel-item img').forEach(elem => {
             elem.style.minHeight = minHeight+"px";
+        });
+    }
+
+    if(location.href.indexOf('perfil')!= -1){
+        document.querySelector('form input[name="cpf"]').addEventListener('keypress', (e) => {
+            var charCode = (e.which) ? e.which : e.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
         });
     }
 };

@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.withoutNav')
 
 @section('title', 'Criar conta')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <h4 class="border-bottom pb-3 mb-3">Crie sua conta</h4>
@@ -94,7 +94,7 @@
                                     <label for="cpf" class="col-form-label">{{ __('CPF') }}</label>
                                     <input id="cpf" type="text" maxlength="11" class="form-control @error('cpf') is-invalid @enderror" 
                                         value="{{ old('cpf') }}" name="cpf" {{ old('typeUser') == 'comprador' ? 'required' : '' }} 
-                                        autocomplete="cpf">
+                                        autocomplete="cpf" />
 
                                     @error('cpf')
                                         <span class="invalid-feedback" role="alert">

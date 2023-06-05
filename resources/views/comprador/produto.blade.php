@@ -146,7 +146,7 @@
             <h4>{{count($comentarios)}} comentários</h4>
             <div class="col-12 col-lg-6 mt-2 mb-4">
                 <div class="border rounded shadow-sm p-3 bg-light position-sticky" style="top: 10px">
-                    <form action="/comentary/{{$produto->id}}" method="post" class="text-end">
+                    <form action="/{{Auth::user()->type}}/comentary/{{$produto->id}}" method="post" class="text-end">
                         @csrf
 
                         <div class="mb-3">
